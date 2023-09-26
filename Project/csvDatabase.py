@@ -23,7 +23,7 @@ def addRecord(fileName, record):
 #fileName: name of csv file
 def getRecordCount(fileName):
     with open(fileName, 'r') as csvfile:
-        reader = csv.reader(csvfile)        
+        reader = csv.reader(csvfile)
         return sum(1 for _ in reader) - 1
 
 #Looks up record
