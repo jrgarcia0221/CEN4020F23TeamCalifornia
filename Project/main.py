@@ -263,7 +263,7 @@ def buildMenu():
                                               goBack=True,
                                               action=learnSkill)
                       ]),
-                  usefulLinks.generalMenu(1),
+                  usefulLinks.usefulLinksMenu(1),
                   importantLinks
               ]),
           menuSystem.menuNode("Student Lookup",
@@ -273,7 +273,7 @@ def buildMenu():
           menuSystem.menuNode("Watch video on why you should join InCollege!",
                               action=watchVideo,
                               goBack=True),
-          usefulLinks.generalMenu(0),
+          usefulLinks.usefulLinksMenu(0),
           importantLinks,
           menuSystem.menuNode("Exit", action=lambda: sys.exit(0), goBack=True)
       ])
@@ -285,7 +285,8 @@ def createDatabases():
   databaseInterface.createDatabase()
   databaseInterface.createJobPostingDatabase()
 
-def tree():
+# build main menu tree
+def buildMenuTree():
   menuTree = buildMenu()
 
   while True:
@@ -308,11 +309,8 @@ def main():
   global postedJobs
   postedJobs = databaseInterface.readJobPosts()
 
-  tree()
-#   menuTree = buildMenu()
-
-#   while True:
-#     menuSystem.navigateMenu(menuTree, [])
+  # build menu tree
+  buildMenuTree()
 
 
 if __name__ == '__main__':

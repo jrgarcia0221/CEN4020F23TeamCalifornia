@@ -42,40 +42,34 @@ def developers():
   print("Under construction")
   return True
 
-def generalMenu(log):
-  general_menu_items = [
+# build useful links menu
+# Sign up option available only if user is not logged in
+#   (redirects to main menu where create account and login are)
+def create_general_menu(log):
+    general_menu_items = [
         menuSystem.menuNode("Help Center", goBack=True, action=helpCenter),
         menuSystem.menuNode("About", goBack=True, action=about),
         menuSystem.menuNode("Press", goBack=True, action=press),
         menuSystem.menuNode("Blog", goBack=True, action=blog),
         menuSystem.menuNode("Careers", goBack=True, action=careers),
         menuSystem.menuNode("Developers", goBack=True, action=developers)
-  ]
+    ]
 
-  if log == 1:
-      # Logged in
-      general_menu = menuSystem.menuNode("General", goBack=True, children=general_menu_items)
-      return menuSystem.menuNode(
-          "Useful Links",
-          goBack=True,
-          children=[
-              general_menu,
-              menuSystem.menuNode("Browse InCollege", goBack=True, action=browseInCollege),
-              menuSystem.menuNode("Business Solutions", goBack=True, action=businessSolutions),
-              menuSystem.menuNode("Directories", goBack=True, action=directories)
-          ]
-      )
-  else:
-      # Not logged in
-      general_menu_items.insert(0, menuSystem.menuNode("Sign Up", action=main.tree))
-      general_menu = menuSystem.menuNode("General", goBack=True, children=general_menu_items)
-      return menuSystem.menuNode(
-          "Useful Links",
-          goBack=True,
-          children=[
-              general_menu,
-              menuSystem.menuNode("Browse InCollege", goBack=True, action=browseInCollege),
-              menuSystem.menuNode("Business Solutions", goBack=True, action=businessSolutions),
-              menuSystem.menuNode("Directories", goBack=True, action=directories)
-          ]
-      )
+    if not log:
+        general_menu_items.insert(0, menuSystem.menuNode("Sign Up", action=main.buildMenuTree))
+
+    return menuSystem.menuNode("General", goBack=True, children=general_menu_items)
+
+def usefulLinksMenu(log):
+    general_menu = create_general_menu(log)
+
+    return menuSystem.menuNode(
+        "Useful Links",
+        goBack=True,
+        children=[
+            general_menu,
+            menuSystem.menuNode("Browse InCollege", goBack=True, action=browseInCollege),
+            menuSystem.menuNode("Business Solutions", goBack=True, action=businessSolutions),
+            menuSystem.menuNode("Directories", goBack=True, action=directories)
+        ]
+    )
