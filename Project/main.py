@@ -60,7 +60,7 @@ def createAccount():
   databaseInterface.addStudentAccount(username, password, first, last)
   return True
 
-
+loggedIn = False
 #Handles user login
 #No existing accounts - returns to main menu
 #User enters username - checks if student exists in database
@@ -89,6 +89,7 @@ def login():
 
   # save logged in user
   databaseInterface.getCurrentUser(username)
+
 
   print("Login successful!")
   return True
@@ -187,24 +188,46 @@ def languages():
   return True
 
 
-useFulLinks = menuSystem.menuNode(
-    "Useful Links",
-    goBack=True,
-    children=[menuSystem.menuNode("General",
-                            goBack=True,
-                            children=[
-                                menuSystem.menuNode("Sign Up")
-                            ]),
-        menuSystem.menuNode("Browse InCollege",
-                            goBack=True,
-                            action=browseInCollege),
-        menuSystem.menuNode("Business Solutions",
-                            goBack=True,
-                            action=businessSolutions),
-        menuSystem.menuNode("Directories",
-                            goBack=True,
-                            action=directories)
-])
+def generalMenu(log):
+  general_menu_items = [
+        menuSystem.menuNode("Help Center"),
+        menuSystem.menuNode("About"),
+        menuSystem.menuNode("Display"),
+        menuSystem.menuNode("Press"),
+        menuSystem.menuNode("Blog"),
+        menuSystem.menuNode("Careers"),
+        menuSystem.menuNode("Developers")
+  ]
+
+  if log == 1:
+      # Logged in
+      general_menu = menuSystem.menuNode("General", goBack=True, children=general_menu_items)
+      return menuSystem.menuNode(
+          "Useful Links",
+          goBack=True,
+          children=[
+              general_menu,
+              menuSystem.menuNode("Browse InCollege", goBack=True, action=browseInCollege),
+              menuSystem.menuNode("Business Solutions", goBack=True, action=businessSolutions),
+              menuSystem.menuNode("Directories", goBack=True, action=directories)
+          ]
+      )
+  else:
+      # Not logged in
+      general_menu_items.insert(0, menuSystem.menuNode("Sign Up", action=tree))
+      general_menu = menuSystem.menuNode("General", goBack=True, children=general_menu_items)
+      return menuSystem.menuNode(
+          "Useful Links",
+          goBack=True,
+          children=[
+              general_menu,
+              menuSystem.menuNode("Browse InCollege", goBack=True, action=browseInCollege),
+              menuSystem.menuNode("Business Solutions", goBack=True, action=businessSolutions),
+              menuSystem.menuNode("Directories", goBack=True, action=directories)
+          ]
+      )
+
+
 
 importantLinks = menuSystem.menuNode(
     "InCollege Important Links",
@@ -241,6 +264,7 @@ importantLinks = menuSystem.menuNode(
                             goBack=True,
                             action=languages),
 ])
+
 #Build menu here
 #menuNode parameters:
 #label - the name of the choice - do not include number of choice
@@ -289,7 +313,7 @@ def buildMenu():
                                               goBack=True,
                                               action=learnSkill)
                       ]),
-                  useFulLinks,
+                  generalMenu(1),
                   importantLinks
               ]),
           menuSystem.menuNode("Student Lookup",
@@ -299,7 +323,7 @@ def buildMenu():
           menuSystem.menuNode("Watch video on why you should join InCollege!",
                               action=watchVideo,
                               goBack=True),
-          useFulLinks,
+          generalMenu(0),
           importantLinks,
           menuSystem.menuNode("Exit", action=lambda: sys.exit(0), goBack=True)
       ])
@@ -311,6 +335,11 @@ def createDatabases():
   databaseInterface.createDatabase()
   databaseInterface.createJobPostingDatabase()
 
+def tree():
+  menuTree = buildMenu()
+
+  while True:
+    menuSystem.navigateMenu(menuTree, [])
 
 def main():
   createDatabases()
@@ -329,10 +358,11 @@ def main():
   global postedJobs
   postedJobs = databaseInterface.readJobPosts()
 
-  menuTree = buildMenu()
+  tree()
+#   menuTree = buildMenu()
 
-  while True:
-    menuSystem.navigateMenu(menuTree, [])
+#   while True:
+#     menuSystem.navigateMenu(menuTree, [])
 
 
 if __name__ == '__main__':
