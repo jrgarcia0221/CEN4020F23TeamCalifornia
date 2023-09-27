@@ -1,6 +1,7 @@
 import databaseInterface
-import re
 import menuSystem
+import usefulLinks
+import re
 import sys
 
 
@@ -142,20 +143,6 @@ def studentLookup():
   return True
 
 
-# actions for useful links
-def browseInCollege():
-  print("Under construction")
-  return True
-
-def businessSolutions():
-  print("Under construction")
-  return True
-
-def directories():
-  print("Under construction")
-  return True
-
-
 # actions for important links
 def copyrightNotice():
   return True
@@ -188,44 +175,7 @@ def languages():
   return True
 
 
-def generalMenu(log):
-  general_menu_items = [
-        menuSystem.menuNode("Help Center"),
-        menuSystem.menuNode("About"),
-        menuSystem.menuNode("Display"),
-        menuSystem.menuNode("Press"),
-        menuSystem.menuNode("Blog"),
-        menuSystem.menuNode("Careers"),
-        menuSystem.menuNode("Developers")
-  ]
 
-  if log == 1:
-      # Logged in
-      general_menu = menuSystem.menuNode("General", goBack=True, children=general_menu_items)
-      return menuSystem.menuNode(
-          "Useful Links",
-          goBack=True,
-          children=[
-              general_menu,
-              menuSystem.menuNode("Browse InCollege", goBack=True, action=browseInCollege),
-              menuSystem.menuNode("Business Solutions", goBack=True, action=businessSolutions),
-              menuSystem.menuNode("Directories", goBack=True, action=directories)
-          ]
-      )
-  else:
-      # Not logged in
-      general_menu_items.insert(0, menuSystem.menuNode("Sign Up", action=tree))
-      general_menu = menuSystem.menuNode("General", goBack=True, children=general_menu_items)
-      return menuSystem.menuNode(
-          "Useful Links",
-          goBack=True,
-          children=[
-              general_menu,
-              menuSystem.menuNode("Browse InCollege", goBack=True, action=browseInCollege),
-              menuSystem.menuNode("Business Solutions", goBack=True, action=businessSolutions),
-              menuSystem.menuNode("Directories", goBack=True, action=directories)
-          ]
-      )
 
 
 
@@ -313,7 +263,7 @@ def buildMenu():
                                               goBack=True,
                                               action=learnSkill)
                       ]),
-                  generalMenu(1),
+                  usefulLinks.generalMenu(1),
                   importantLinks
               ]),
           menuSystem.menuNode("Student Lookup",
@@ -323,7 +273,7 @@ def buildMenu():
           menuSystem.menuNode("Watch video on why you should join InCollege!",
                               action=watchVideo,
                               goBack=True),
-          generalMenu(0),
+          usefulLinks.generalMenu(0),
           importantLinks,
           menuSystem.menuNode("Exit", action=lambda: sys.exit(0), goBack=True)
       ])
