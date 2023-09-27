@@ -29,7 +29,7 @@ def passwordIsValid(password):
 
 #Handles user create account
 #Checks if database is full (capacity is 5)
-#User enters username - checks if student is unqiue
+#User enters username - checks if student is unique
 #User enters password - checks if password is valid
 #User enters first and last name
 #Creates account in database
@@ -263,7 +263,7 @@ def buildMenu():
                                               goBack=True,
                                               action=learnSkill)
                       ]),
-                  usefulLinks.usefulLinksMenu(1),
+                  usefulLinks.buildUsefulLinksMenu(True),
                   importantLinks
               ]),
           menuSystem.menuNode("Student Lookup",
@@ -273,7 +273,7 @@ def buildMenu():
           menuSystem.menuNode("Watch video on why you should join InCollege!",
                               action=watchVideo,
                               goBack=True),
-          usefulLinks.usefulLinksMenu(0),
+          usefulLinks.buildUsefulLinksMenu(False),
           importantLinks,
           menuSystem.menuNode("Exit", action=lambda: sys.exit(0), goBack=True)
       ])
