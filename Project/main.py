@@ -61,7 +61,7 @@ def createAccount():
   databaseInterface.addStudentAccount(username, password, first, last)
   return True
 
-loggedIn = False
+
 #Handles user login
 #No existing accounts - returns to main menu
 #User enters username - checks if student exists in database
@@ -173,10 +173,6 @@ def guestControls():
 
 def languages():
   return True
-
-
-
-
 
 
 importantLinks = menuSystem.menuNode(
