@@ -62,7 +62,6 @@ def addGuestSettings(username):
     csvDatabase.addRecord(guestSettingsDB, [username, "On", "On","On","English"])
 
 def lookForGuestSetting():
-    
     arr = csvDatabase.lookupRecord(guestSettingsDB, 1, currentUser[0])
     return arr
 

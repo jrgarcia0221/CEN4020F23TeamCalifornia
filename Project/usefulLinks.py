@@ -162,7 +162,7 @@ def brandPolicy():
   return True
 
 def initializeGuestArray(guestArr):
-    global guestSetting 
+    global guestSetting
     guestSetting = guestArr
 
 def guestControls():
@@ -178,11 +178,12 @@ def guestControls():
   return True
 
 def toggleEmail():
+  # to do it without restarting, need to read back each time func called
   if guestSetting[1] == "On":
-     toggle = "Off"
+    toggle = "Off"
   else:
-     toggle = "On"
-  # csvDatabase.changeRecord("guestSettings.csv", 1, guestSetting[0], toggle)
+    toggle = "On"
+  csvDatabase.changeRecord("guestSettings.csv", 1, guestSetting[0], toggle)
   return True
 
 def toggleSMS():

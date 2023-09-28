@@ -53,15 +53,28 @@ def displayRecord(filename):
             record.append(row)
     return record
 
-# def changeRecord(filename, col, lookupValue, toggle):
-#     with open(filename, 'r') as csvfile:
-#         reader = csv.reader(csvfile)
-#         next(reader)  # Skip the header row
-#         for row in reader:
-#             if (len(row) < col):
-#                 raise Exception("Row does not have " + col + " columns")
-#             if row[col-1] == lookupValue:
-#                 with open(filename, 'w') as csvfile:
+# deleting whole file rn
+def changeRecord(filename, col, lookupValue, toggle):
+    with open(filename, 'r') as csvfile:
+        reader = csv.reader(csvfile)
+        data = list(reader)
+        # print(col, lookupValue, toggle)
+        # print(data)
+    for row in data:
+        if lookupValue in row:
+            row[col] = toggle
+    # print(data)
 
-#                 # row[col-1] = toggle
-#     return None  # Return None if record is not found
+    with open(filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerows(data)
+
+        # next(reader)  # Skip the header row
+        # for row in reader:
+        #     if (len(row) < col):
+        #         raise Exception("Row does not have " + col + " columns")
+        #     if row[col-1] == lookupValue:
+        #         with open(filename, 'w') as csvfile:
+
+        #             row[col-1] = toggle
+    # return None  # Return None if record is not found
