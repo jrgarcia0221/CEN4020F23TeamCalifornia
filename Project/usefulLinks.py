@@ -213,12 +213,12 @@ def languages():
   return True
 
 def toggleLanguages():
-   if guestSetting[3] == "English":
-     toggle = "Spanish"
-   else:
-     toggle = "English"
-   csvDatabase.changeRecord("guestSettings.csv", 4, guestSetting[0], toggle)
-   return True
+  if guestSetting[4] == "English":
+    toggle = "Spanish"
+  else:
+    toggle = "English"
+  csvDatabase.changeRecord("guestSettings.csv", 4, guestSetting[0], toggle)
+  return True
 
 
 def buildPrivacyMenu(log):
