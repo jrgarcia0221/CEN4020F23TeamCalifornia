@@ -184,6 +184,7 @@ def toggleEmail():
   else:
     toggle = "On"
   csvDatabase.changeRecord("guestSettings.csv", 1, guestSetting[0], toggle)
+  print("Your changes will be reflected next time system boots up.")
   return True
 
 def toggleSMS():
@@ -191,7 +192,8 @@ def toggleSMS():
      toggle = "Off"
   else:
      toggle = "On"
-  # csvDatabase.changeRecord("guestSettings.csv", 1, guestSetting[1], toggle)
+  csvDatabase.changeRecord("guestSettings.csv", 2, guestSetting[0], toggle)
+  print("Your changes will be reflected next time system boots up.")
   return True
 
 def toggleTargetedAudience():
@@ -199,7 +201,8 @@ def toggleTargetedAudience():
      toggle = "Off"
   else:
      toggle = "On"
-  # csvDatabase.changeRecord("guestSettings.csv", 1, guestSetting[3], toggle)
+  csvDatabase.changeRecord("guestSettings.csv", 3, guestSetting[0], toggle)
+  print("Your changes will be reflected next time system boots up.")
   return True
 
 def languages():
@@ -207,7 +210,6 @@ def languages():
   print("------------------------------------------------")
   print("Language:", guestSetting[4])
   print("\nPlease select option below to change setting (English/Spanish)")
-  # csvDatabase.changeRecord("guestSettings.csv", 1, guestSetting[3], toggle)
   return True
 
 def toggleLanguages():
@@ -215,6 +217,7 @@ def toggleLanguages():
      toggle = "Spanish"
    else:
      toggle = "English"
+   csvDatabase.changeRecord("guestSettings.csv", 4, guestSetting[0], toggle)
    return True
 
 
