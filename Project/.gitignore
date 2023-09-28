@@ -1,3 +1,6 @@
+__pycache__/
+*.pyc
+
 jobs.csv
 users.csv
 guestSettings.csv
