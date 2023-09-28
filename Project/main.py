@@ -58,7 +58,9 @@ def createAccount():
 
   first = input("Enter your first name: ")
   last = input("Enter your last name: ")
+  databaseInterface.addGuestSettings(username)
   databaseInterface.addStudentAccount(username, password, first, last)
+
   return True
 
 
@@ -90,6 +92,13 @@ def login():
 
   # save logged in user
   databaseInterface.getCurrentUser(username)
+
+  global guestSettingArr
+  guestSettingArr = databaseInterface.lookForGuestSetting()
+
+  usefulLinks.initializeGuestArray(guestSettingArr)
+
+  print (guestSettingArr[0])
 
 
   print("Login successful!")
@@ -143,74 +152,6 @@ def studentLookup():
   return True
 
 
-# actions for important links
-def copyrightNotice():
-  return True
-
-def about():
-  return True
-
-def accessibility():
-  return True
-
-def userAgreement():
-  return True
-
-def privacyPolicy():
-  return True
-
-def cookiePolicy():
-  return True
-
-def copyrightPolicy():
-  return True
-
-def brandPolicy():
-  return True
-
-def guestControls():
-  return True
-
-def languages():
-  return True
-
-
-importantLinks = menuSystem.menuNode(
-    "InCollege Important Links",
-    goBack=True,
-    children=[
-        menuSystem.menuNode("Copyright Notice",
-                            goBack=True,
-                            action=copyrightNotice),
-        menuSystem.menuNode("About",
-                            goBack=True,
-                            action=about),
-        menuSystem.menuNode("Accessibility",
-                            goBack=True,
-                            action=accessibility),
-        menuSystem.menuNode("User Agreement",
-                            goBack=True,
-                            action=userAgreement),
-        menuSystem.menuNode("Privacy Policy",
-                            goBack=True,
-                            action=privacyPolicy),
-        menuSystem.menuNode("Cookie Policy",
-                            goBack=True,
-                            action=cookiePolicy),
-        menuSystem.menuNode("Copyright Policy",
-                            goBack=True,
-                            action=copyrightPolicy),
-        menuSystem.menuNode("Brand Policy",
-                            goBack=True,
-                            action=brandPolicy),
-        menuSystem.menuNode("Guest Controls",
-                            goBack=True,
-                            action=guestControls),
-        menuSystem.menuNode("Languages",
-                            goBack=True,
-                            action=languages),
-])
-
 #Build menu here
 #menuNode parameters:
 #label - the name of the choice - do not include number of choice
@@ -260,7 +201,7 @@ def buildMenu():
                                               action=learnSkill)
                       ]),
                   usefulLinks.buildUsefulLinksMenu(True),
-                  importantLinks
+                  usefulLinks.buildImportantLinksMenu(True)
               ]),
           menuSystem.menuNode("Student Lookup",
                               goBack=True,
@@ -270,7 +211,7 @@ def buildMenu():
                               action=watchVideo,
                               goBack=True),
           usefulLinks.buildUsefulLinksMenu(False),
-          importantLinks,
+          usefulLinks.buildImportantLinksMenu(False),
           menuSystem.menuNode("Exit", action=lambda: sys.exit(0), goBack=True)
       ])
   return root
@@ -280,6 +221,7 @@ def buildMenu():
 def createDatabases():
   databaseInterface.createDatabase()
   databaseInterface.createJobPostingDatabase()
+  databaseInterface.createGuestSettingsDatabase()
 
 # build main menu tree
 def buildMenuTree():

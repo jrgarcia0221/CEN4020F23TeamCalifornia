@@ -52,3 +52,16 @@ def displayRecord(filename):
         for row in reader:
             record.append(row)
     return record
+
+# def changeRecord(filename, col, lookupValue, toggle):
+#     with open(filename, 'r') as csvfile:
+#         reader = csv.reader(csvfile)
+#         next(reader)  # Skip the header row
+#         for row in reader:
+#             if (len(row) < col):
+#                 raise Exception("Row does not have " + col + " columns")
+#             if row[col-1] == lookupValue:
+#                 with open(filename, 'w') as csvfile:
+
+#                 # row[col-1] = toggle
+#     return None  # Return None if record is not found

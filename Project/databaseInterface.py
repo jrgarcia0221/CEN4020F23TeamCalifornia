@@ -2,6 +2,7 @@ import csvDatabase
 
 usersDB = "users.csv"
 jobsDB = "jobs.csv"
+guestSettingsDB = "guestSettings.csv"
 currentUser = []
 
 #Creates Database
@@ -51,6 +52,19 @@ def login(username, password):
 def createJobPostingDatabase():
     csvDatabase.createDatabase(jobsDB, ['title', 'description', 'employer', 'location', 'salary', 'firstname', 'lastname'])
     return True
+
+#creates a database with guest settings
+def createGuestSettingsDatabase():
+    csvDatabase.createDatabase(guestSettingsDB, ['username', 'email', 'sms', 'targetedadvertising', 'language'])
+    return True
+
+def addGuestSettings(username):
+    csvDatabase.addRecord(guestSettingsDB, [username, "On", "On","On","English"])
+
+def lookForGuestSetting():
+    
+    arr = csvDatabase.lookupRecord(guestSettingsDB, 1, currentUser[0])
+    return arr
 
 # current user
 def getCurrentUser(user):
