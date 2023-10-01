@@ -3,6 +3,8 @@ import main
 import databaseInterface
 import csvDatabase
 
+guestSetting = []
+
 # actions for useful links
 def browseInCollege():
   print("Under construction")
@@ -161,8 +163,8 @@ def brandPolicy():
   brandP += "improving our platform to better connect our communities and allow everyone to share their accomplishments and achievments to all.\n"
   return True
 
-def initializeGuestArray(guestArr):
-    global guestSetting
+def initializeGuestArray(guestArr):   
+    global guestSetting 
     guestSetting = guestArr
 
 def guestControls():
