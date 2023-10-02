@@ -95,3 +95,30 @@ def test_login_importantLinks_guestControls():
     
     with patch('main.login', side_effect=mock_login):
         navigation(["2", "5", "5"], ["InCollege Important Links", "Copyright Notice", "About", "Accessibility", "User Agreement", "Privacy Policy", "Cookie Policy", "Copyright Policy", "Brand Policy", "Languages", "Guest Controls"])
+
+def test_guestControls_email():
+    def mock_login():
+        return True
+    
+    with patch('main.login', side_effect=mock_login):
+        navigation(["2", "5", "5", "1"], ["InCollege Important Links", "Copyright Notice", "About", "Accessibility", "User Agreement", "Privacy Policy", "Cookie Policy", "Copyright Policy", "Brand Policy", "Languages", "Guest Controls", "Toggle Email", "Toggle SMS", "Toggle Targeted Audience"])
+
+def test_guestControls_SMS():
+    def mock_login():
+        return True
+    
+    with patch('main.login', side_effect=mock_login):
+        navigation(["2", "5", "5", "1"], ["InCollege Important Links", "Copyright Notice", "About", "Accessibility", "User Agreement", "Privacy Policy", "Cookie Policy", "Copyright Policy", "Brand Policy", "Languages", "Guest Controls", "Toggle Email", "Toggle SMS", "Toggle Targeted Audience"])
+
+def test_guestControls_audience():
+    def mock_login():
+        return True
+    
+    with patch('main.login', side_effect=mock_login):
+        navigation(["2", "5", "5", "1"], ["InCollege Important Links", "Copyright Notice", "About", "Accessibility", "User Agreement", "Privacy Policy", "Cookie Policy", "Copyright Policy", "Brand Policy", "Languages", "Guest Controls", "Toggle Email", "Toggle SMS", "Toggle Targeted Audience"])
+
+def test_general_signup():
+    def mock_login():
+        return False    
+    with patch('main.login', side_effect=mock_login):
+        navigation(["6", "1"], ["Useful Links", "General", "Browse InCollege", "Business Solutions", "Directories", "Sign Up"])
