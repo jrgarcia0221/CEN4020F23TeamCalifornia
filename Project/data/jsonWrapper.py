@@ -21,3 +21,18 @@ def deserialize(jsonStr):
 def deserializeFromFile(fileName):
     with open(fileName, 'r') as file:
         return json.load(file)
+    
+def jsonIsValid(jsonStr):
+    try:
+        json.loads(jsonStr)
+        return True
+    except json.JSONDecodeError:
+        return False
+    
+def jsonFileisValid(fileName):
+    try:
+        with open(fileName, 'r') as file:
+            json.load(file)
+            return True
+    except (FileNotFoundError, json.JSONDecodeError):
+        return False
