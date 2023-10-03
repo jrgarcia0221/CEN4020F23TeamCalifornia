@@ -4,7 +4,7 @@ import usefulLinks
 import re
 import sys
 
-
+#Author Grant DeBiase
 #Returns true if password is valid
 def passwordIsValid(password):
   #Password must be between 8 and 12 characters
@@ -27,7 +27,8 @@ def passwordIsValid(password):
   return True
 
 
-#Handles user create account
+#Author Grant DeBiase
+# andles user create account
 #Checks if database is full (capacity is 5)
 #User enters username - checks if student is unique
 #User enters password - checks if password is valid
@@ -64,7 +65,8 @@ def createAccount():
   return True
 
 
-#Handles user login
+#Author Grant DeBiase
+# Handles user login
 #No existing accounts - returns to main menu
 #User enters username - checks if student exists in database
 #User enters password - checks if password is matched
@@ -152,6 +154,7 @@ def studentLookup():
   return True
 
 
+#Author Grant DeBiase
 #Build menu here
 #menuNode parameters:
 #label - the name of the choice - do not include number of choice

@@ -1,3 +1,4 @@
+#Author Grant DeBiase
 #Tree structure
 #label - the name of the choice - do not include number of choice
 #action=None - function that gets called when menu choice is selected
@@ -20,14 +21,14 @@ class menuNode:
       childNode = menuNode("Go Back: ", isGoBack=True)
       self.children.append(childNode)
 
-
+#Author Grant DeBiase
 def printMenu(node):
   print("----------------------------------------------------")
   print(node.label)
   for i, child in enumerate(node.children, start=1):
     print(f"{i}. {child.label}")
 
-
+#Author Grant DeBiase
 def navigateMenu(node, stack):
   printMenu(node)
   while True:
