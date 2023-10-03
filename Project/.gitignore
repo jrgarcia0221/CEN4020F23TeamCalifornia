@@ -4,3 +4,4 @@ __pycache__/
 jobs.csv
 users.csv
 guestSettings.csv
+data/students.json
