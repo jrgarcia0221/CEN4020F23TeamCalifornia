@@ -28,9 +28,9 @@ def isEmpty(db):
 #returns true if database if full
 def isFull(db):
     if db == "user":
-        return csvDatabase.getRecordCount(usersDB) >= 5
+        return csvDatabase.getRecordCount(usersDB) >= 10
     elif db == "job":
-        return csvDatabase.getRecordCount(jobsDB) >= 5
+        return csvDatabase.getRecordCount(jobsDB) >= 10
 
 #Adds Student Account
 def addStudentAccount(username, password, firstname, lastname):
