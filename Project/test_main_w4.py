@@ -17,16 +17,16 @@ def setupMockData():
     mockUsers = jsonDB("mockData.json")
     mockUsers.clear()
 
-    s1 = dataTypes.createStudent("s1", "Password123!", "s", "1", "cs", "usf")
-    s2 = dataTypes.createStudent("s2", "Password123!", "s", "2", "cs", "usf")
-    s3 = dataTypes.createStudent("s3", "Password123!", "s", "3", "cs", "usf")
+    s1 = dataTypes.createStudent("s1", "Password123!", "s", "1", "cs", "usf", friendrequest=[])
+    s2 = dataTypes.createStudent("s2", "Password123!", "s", "2", "cs", "usf", friendrequest=[])
+    s3 = dataTypes.createStudent("s3", "Password123!", "s", "3", "cs", "usf", friendrequest=[])
     mockUsers.add(s1)
     mockUsers.add(s2)
     mockUsers.add(s3)
 
     currentUser = s1
     users_db = mockUsers
-    matching_students = [s3]
+    matching_students = [s2,s3]
 
     return currentUser, users_db, matching_students
 
@@ -36,14 +36,22 @@ def test_sendFriendRequest():
 
     with patch("main.currentUser", currentUser), \
         patch("main.users_db", users_db), \
-        patch("builtins.input", side_effect=["1"]):
+        patch("builtins.input", side_effect=["1", "1"]):
             
-        sendFriendRequest(matching_students)      
+        sendFriendRequest(matching_students)
 
+        #index of first match
         index = users_db.read().index(matching_students[0])
-
+        #assert first match has from request from current user
         assert users_db.read(index)["friendrequest"][0] == currentUser["username"]
- 
+
+        #index of second match
+        index2 = users_db.read().index(matching_students[1])
+        #assert second match has friend request from current user
+        assert users_db.read(index2)["friendrequest"][0] == currentUser["username"]
+        
+        #assert current user does not have a friend request    
+        assert len(currentUser["friendrequest"]) == 0 
 
 #Author Grant    
 def setupMockData2():
@@ -139,4 +147,3 @@ def test_showNetworkOption():
     
     with patch('main.login', side_effect=mock_login):
         navigation(["2"], ["Show my Network"])
-
