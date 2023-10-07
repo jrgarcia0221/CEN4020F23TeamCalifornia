@@ -262,9 +262,6 @@ def sendFriendRequest(matching_students):
             index = users_db.data.index(student)
             users_db.update(index, student)
 
-    # Update the current user's data in the database after sending friend requests
-    index = users_db.data.index(currentUser)
-    users_db.update(index, currentUser)
 
             
 
