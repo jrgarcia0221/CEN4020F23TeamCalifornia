@@ -44,6 +44,8 @@ def navigateMenu(node, stack):
           if selectedNode.action() and selectedNode.children:
             stack.append(node)
             navigateMenu(selectedNode, stack)
+          else:
+            navigateMenu(node, stack)
         else:
           stack.append(node)
           navigateMenu(selectedNode, stack)
