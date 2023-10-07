@@ -4,7 +4,9 @@ from io import StringIO
 import sys
 import main
 import databaseInterface
-from main import main, buildMenuTree, login, watchVideo, studentLookup, createAccount, passwordIsValid, postJobAction
+from main import main, buildMenuTree, login, watchVideo, studentLookup, createAccount, passwordIsValid, postJobAction, sendFriendRequest
+import jsonDB
+import dataTypes
 from usefulLinks import guestSetting, toggleEmail, toggleSMS, toggleLanguages, toggleTargetedAudience
 from databaseInterface import isFull, addJobPost
 from csvDatabase import changeRecord
@@ -122,3 +124,5 @@ def test_general_signup():
         return False    
     with patch('main.login', side_effect=mock_login):
         navigation(["6", "1"], ["Useful Links", "General", "Browse InCollege", "Business Solutions", "Directories", "Sign Up"])
+
+
