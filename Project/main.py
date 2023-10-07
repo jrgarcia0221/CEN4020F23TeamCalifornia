@@ -201,7 +201,7 @@ def LastNameLookup():
 
 
     sendFriendRequest(matching_students)  
-    return True
+    return False
   
 def universityLookup():
       uni = input("Enter the university of student to lookup: ")
