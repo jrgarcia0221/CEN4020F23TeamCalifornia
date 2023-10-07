@@ -1,8 +1,7 @@
 import json
 import jsonWrapper
+import jsonDB
 
-#Author Grant DeBiase
-#Function to create setting dictionary
 def createSetting(email="On", sms="On",targetedAdvert="On", language="English"):
     return {
         "email": email,
@@ -11,15 +10,20 @@ def createSetting(email="On", sms="On",targetedAdvert="On", language="English"):
         "language":language
     }    
 
+
 #Author Grant DeBiase
 #Function to create student dictionary
-def createStudent(username="JohnDoe", password="Password123!", firstname="John", lastname="Doe", settings=createSetting()):
+def createStudent(username="JohnDoe", password="Password123!", firstname="John", lastname="Doe", major = "major", university = "uni", settings=createSetting(), friendrequest = [], friends=[]):
     return {
         "username": username,
         "password": password,
         "firstname": firstname,
         "lastname": lastname,
-        "settings": settings
+        "major": major,
+        "university": university,
+        "settings": settings,
+        "friendrequest": friendrequest,
+        "friends": friends
     }
     
 #Author Grant DeBiase

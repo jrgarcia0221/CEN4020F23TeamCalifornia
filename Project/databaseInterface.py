@@ -7,7 +7,7 @@ currentUser = []
 
 #Creates Database
 def createDatabase():
-    csvDatabase.createDatabase(usersDB, ['username', 'password', 'firstname', 'lastname'])
+    csvDatabase.createDatabase(usersDB, ['username', 'password', 'firstname', 'lastname', 'major', 'university'])
     return True
 
 #returns true if student record exists
@@ -17,6 +17,10 @@ def studentExists(username):
 #returns true if student record exists by first and last name
 def studentNameExists(firstName, lastName):    
     return (csvDatabase.lookupRecord(usersDB, 3, firstName) != None) and (csvDatabase.lookupRecord(usersDB, 4, lastName) != None)
+
+#returns true if student record exists by first and last name
+def studentlastNameExists(lastName):    
+    return csvDatabase.lookupRecord(usersDB, 4, lastName) != None
 
 #returns true if database is empty
 def isEmpty(db):
@@ -33,9 +37,9 @@ def isFull(db):
         return csvDatabase.getRecordCount(jobsDB) >= 10
 
 #Adds Student Account
-def addStudentAccount(username, password, firstname, lastname):
+def addStudentAccount(username, password, firstname, lastname, major, university):
     if (not studentExists(username) and not isFull("user")):
-        csvDatabase.addRecord(usersDB, [username, password, firstname, lastname])
+        csvDatabase.addRecord(usersDB, [username, password, firstname, lastname, major, university])
         return True
     return False
                 

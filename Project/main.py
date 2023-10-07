@@ -3,6 +3,11 @@ import menuSystem
 import usefulLinks
 import re
 import sys
+import jsonDB
+import dataTypes
+
+currentUser = None
+users_db = jsonDB.jsonDB("users.json")
 
 #Author Grant DeBiase
 #Returns true if password is valid
@@ -59,8 +64,13 @@ def createAccount():
 
   first = input("Enter your first name: ")
   last = input("Enter your last name: ")
+  major = input("Enter your major: ")
+  uni = input("Enter your university: ")
   databaseInterface.addGuestSettings(username)
-  databaseInterface.addStudentAccount(username, password, first, last)
+  databaseInterface.addStudentAccount(username, password, first, last, major, uni)
+  #json 
+  new_user = dataTypes.createStudent(username, password, first, last, major, uni)
+  users_db.add(new_user)
 
   return True
 
@@ -73,6 +83,8 @@ def createAccount():
 #returns true if successful login
 def login():
   print("--------------------------------")
+
+
 
   if databaseInterface.isEmpty("user"):
     print("There are no existing accounts to log into.")
@@ -100,13 +112,23 @@ def login():
 
   usefulLinks.initializeGuestArray(guestSettingArr)
 
-  print (guestSettingArr[0])
+   
+  conditions = []
+  conditions.append(jsonDB.jsonDB.createQueryCondition("username", username ))
+  #returns the user
+  global currentUser
+  currentUser = users_db.query(conditions)[0] 
+
 
 
   print("Login successful!")
+
+  
+  friendRequest() 
+
   return True
 
-
+  
 def learnSkill():
   print("--------------------------------")
   print("Under construction")
@@ -153,6 +175,230 @@ def studentLookup():
     print("They are not part of the inCollege system")
   return True
 
+def studentLookupLog():
+  print("Choose the option you would like to find someone you know.")
+  return True
+
+
+
+
+def LastNameLookup():
+    last = input("Enter the last name of student to lookup: ")
+    matching_students = []
+
+    for user in users_db.read():
+        if user["lastname"].lower() == last.lower() and (user["username"] != currentUser["username"]) and (user["username"] not in currentUser["friends"]):
+            matching_students.append(user)
+
+    if not matching_students:
+        print("No students found with the specified last name.")
+        return False
+
+    print("Students found:")
+    print("No.\tUsername\tFirstname\tLast Name")
+    for index, student in enumerate(matching_students, start=1):
+          print(f"{index}\t{student['username']:<10}\t{student['firstname']:<10}\t{student['lastname']}")
+
+
+    sendFriendRequest(matching_students)  
+    return True
+  
+def universityLookup():
+      uni = input("Enter the university of student to lookup: ")
+      matching_students = []
+
+      for user in users_db.read():
+        if user["university"].lower() == uni.lower() and (user["username"] != currentUser["username"]) and (user["username"] not in currentUser["friends"]):
+              matching_students.append(user)
+
+      if not matching_students:
+          print("No students found with the specified university.")
+          return False
+
+      print("Students found:")
+      print("No.\tUsername\tFirstname\tUniversity")
+      for index, student in enumerate(matching_students, start=1):
+            print(f"{index}\t{student['username']:<10}\t{student['firstname']:<10}\t{student['university']}")
+
+      sendFriendRequest(matching_students)  
+
+      return True
+
+def majorLookup():
+    major = input("Enter the major of student to lookup: ")
+    matching_students = []
+
+    for user in users_db.read():
+        if user["major"].lower() == major.lower() and (user["username"] != currentUser["username"]) and (user["username"] not in currentUser["friends"]):
+            matching_students.append(user)
+
+    if not matching_students:
+        print("No students found with the specified major.")
+        return False
+
+    print("Students found:")
+    print("No.\tUsername\tFirstname\tMajor")
+    for index, student in enumerate(matching_students, start=1):
+          print(f"{index}\t{student['username']:<10}\t{student['firstname']:<10}\t{student['major']}")
+
+
+    sendFriendRequest(matching_students)  
+    return True
+
+
+def sendFriendRequest(matching_students):
+    for student in matching_students:
+        if currentUser["username"] not in student["friendrequest"]:
+            print(f"Send a friend request to {student['username']}?")
+            print("Select\n(1) Yes\n(2) No")
+            choice = input("Enter your choice (1-2): ")
+
+            if choice == "1":
+                student["friendrequest"].append(currentUser["username"])
+                print(f"Friend request sent to {student['username']}.")
+            else:
+                print(f"No friend request sent to {student['username']}.")
+
+            index = users_db.data.index(student)
+            users_db.update(index, student)
+
+    # Update the current user's data in the database after sending friend requests
+    index = users_db.data.index(currentUser)
+    users_db.update(index, currentUser)
+
+            
+
+
+
+def acceptFriendRequest(friend):
+    print(f"Accepting friend request from {friend}.")
+    # Update sender's friend list
+    for user in users_db.data:
+        if user["username"] == friend:
+            user["friends"].append(currentUser["username"])
+            break
+    
+    # Update current user's friend and friend request lists
+    currentUser["friends"].append(friend)
+    currentUser["friendrequest"].remove(friend)
+    index = users_db.data.index(currentUser)
+    users_db.update(index, currentUser)
+
+    
+    
+def rejectFriendRequest(friend):
+    print(f"Rejecting friend request from {friend}.")
+    currentUser["friendrequest"].remove(friend)
+    index = users_db.data.index(currentUser)
+    users_db.update(index, currentUser) 
+
+
+
+def friendRequest():
+    print("-----------------------------------------")
+    
+    while currentUser["friendrequest"]:
+        print(f"\nYou have a friend request from: {currentUser['friendrequest'][0]}")
+        count = input("Select (1) to accept or (2) to reject, or enter '0' to go back: ")
+
+        if count == "1":
+            acceptFriendRequest(currentUser['friendrequest'][0])
+        elif count == "2":
+            rejectFriendRequest(currentUser['friendrequest'][0])
+        elif count == "0":
+            return True
+        else:
+            print("Invalid choice. No friend request accepted or rejected.")
+    
+    print("You have no pending friend requests.")
+    return True
+
+
+def showNetwork():
+    print("-----------------------------------------")
+    print("\n1. Display Pending Friend Requests")
+    print("2. Display Friends List")
+    print("3. Go Back")
+    choice = input("Enter your choice (1-3): ")
+
+    if choice == "1":
+        displayPendingFriendRequests()
+    elif choice == "2":
+        displayFriendsList()
+    elif choice == "3":
+        return True
+    else:
+        print("Invalid choice. Please try again.")
+
+def displayPendingFriendRequests():
+    print("\nPending Friend Requests")
+    print("-----------------------------------------")
+    if not currentUser["friendrequest"]:
+        print("No pending friend requests.")
+        return
+    friendRequest()
+
+def displayFriendsList():
+    print("\nYour Friends List")
+    print("-----------------------------------------")
+    if not currentUser["friends"]:
+        print("No Connections")
+        return
+
+    for x, friend in enumerate(currentUser["friends"], start=1):
+        print(f"{x}. {friend}")
+
+    print("\nOptions:")
+    print("1. Unfriend a user")
+    print("2. Go Back")
+    choice = input("Enter your choice (1-2): ")
+
+    if choice == "1":
+        unfriendUser()
+    elif choice == "2":
+        return
+    else:
+        print("Invalid choice. Please try again.")
+
+
+
+def unfriendUser():
+    print("\nYour Friends List")
+    print("-----------------------------------------")
+    if not currentUser["friends"]:
+        print("No Connections")
+        return
+
+    for x, friend in enumerate(currentUser["friends"], start=1):
+        print(f"{x}. {friend}")
+
+    try:
+        friend_number = int(input("Enter the number of the friend to unfriend (or enter 0 to go back): "))
+
+        if 1 <= friend_number <= len(currentUser["friends"]):
+            friend = currentUser["friends"][friend_number - 1]
+            currentUser["friends"].remove(friend)
+
+            # Update the friend's list of the unfriended user 
+            for user in users_db.data:
+                if user["username"] == friend:
+                    user["friends"].remove(currentUser["username"])
+                    print(f"You have unfriended {friend}.")
+                    users_db.update(users_db.data.index(user), user)
+                    break
+
+            # Update the current user's data in the database
+            users_db.update(users_db.data.index(currentUser), currentUser)
+        elif friend_number == 0:
+            return True
+        else:
+            print("Invalid friend number. Please try again.")
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+
+
+
+
 
 #Author Grant DeBiase
 #Build menu here
@@ -173,7 +419,36 @@ def buildMenu():
               children=[
                   menuSystem.menuNode("Find Someone you know",
                                       goBack=True,
-                                      action=studentLookup),
+                                      action=studentLookupLog,
+                                      children=[
+                                        menuSystem.menuNode(
+                                              "Search by Last Name",
+                                              goBack=True,
+                                              action=LastNameLookup),
+                                        menuSystem.menuNode(
+                                              "Search by Major",
+                                              goBack=True,
+                                              action=majorLookup),
+                                        menuSystem.menuNode(
+                                              "Search by University",
+                                              goBack=True,
+                                              action=universityLookup)
+                                      ]),
+                  menuSystem.menuNode("Show my Network",
+                                      goBack=True,
+                                      action=showNetwork,
+                                      #implment the menu systems for the showNetwork function
+                                      # children=[
+                                      #   menuSystem.menuNode(
+                                      #         "Display Pending Friend Requests",
+                                      #         goBack=True,
+                                      #         action=displayPendingFriendRequests),
+                                      #   menuSystem.menuNode(
+                                      #         "Display Friends List",
+                                      #         goBack=True,
+                                      #         action=displayFriendsList),
+                                      # ]
+                                      ),
                   menuSystem.menuNode("Job search / internship",
                                       goBack=True,
                                       action=jobSearchAction,
@@ -225,6 +500,7 @@ def createDatabases():
   databaseInterface.createDatabase()
   databaseInterface.createJobPostingDatabase()
   databaseInterface.createGuestSettingsDatabase()
+
 
 # build main menu tree
 def buildMenuTree():
