@@ -1,0 +1,206 @@
+commit 100a91574a856448291ccaacbc76dfb8a7a87fdb
+Author: grant <debiase1@usf.edu>
+Date:   Sun Oct 8 20:51:12 2023 -0400
+
+    moved create3TestAccounts function above CreateAccount Function
+
+commit 71bcde0e91d4d3fd420d8557ea356a57803f3990
+Author: grant <debiase1@usf.edu>
+Date:   Sun Oct 8 20:39:09 2023 -0400
+
+    fixed mutable default parameter issue
+
+commit ef110911d2709111a56e998d6f2925189e35ec08
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Sat Oct 7 23:17:08 2023 -0400
+
+    added tests
+
+commit 173e8ac9cc02de7f2c9d7a4b6945935ca8edd2a8
+Author: grant <debiase1@usf.edu>
+Date:   Sat Oct 7 17:38:49 2023 -0400
+
+    fixed test_sendFriendRequest
+
+commit d58fb408fd4ebb3c21253d213ab8bc62a55ad2a6
+Author: FatemahElsewaky <146388929+FatemahElsewaky@users.noreply.github.com>
+Date:   Sat Oct 7 17:13:34 2023 -0400
+
+    updated sendFriendRequest func
+
+commit 14b2d4453b65e024ea62310df2e0da367deef964
+Author: grant <debiase1@usf.edu>
+Date:   Sat Oct 7 13:43:24 2023 -0400
+
+    small change
+
+commit 941ac3a67d43dc33156cecad984064c5eadbfe49
+Author: grant <debiase1@usf.edu>
+Date:   Sat Oct 7 13:34:24 2023 -0400
+
+    fixed goback issue
+
+commit debcf178d5d8b61de63ea6067def28fc1ed25240
+Author: grant <debiase1@usf.edu>
+Date:   Sat Oct 7 13:00:44 2023 -0400
+
+    added tests
+
+commit e28a46571f40fc7d53e689e0c56253db827d931b
+Author: FatemahElsewaky <146388929+FatemahElsewaky@users.noreply.github.com>
+Date:   Sat Oct 7 07:37:05 2023 -0400
+
+    implemented the Friend request feature
+
+commit bedc58379189d2eb7d6ce8511439bff14a212233
+Author: FatemahElsewaky <146388929+FatemahElsewaky@users.noreply.github.com>
+Date:   Wed Oct 4 00:48:12 2023 -0400
+
+    Update databaseInterface.py
+    
+    updated the system to support 10 accounts
+
+commit ae6e3a03a35b28dae34f381f9f1eec1575d894fc
+Author: grant <debiase1@usf.edu>
+Date:   Tue Oct 3 12:05:23 2023 -0400
+
+    Completed Database
+
+commit f263824b68c2847c32b6e3462ecb46c522d179c6
+Author: grant <debiase1@usf.edu>
+Date:   Tue Oct 3 09:12:59 2023 -0400
+
+    Added author comments
+
+commit 35c6e81ec17f138ffcc4b0d1a398c5610e18295d
+Author: grant <debiase1@usf.edu>
+Date:   Tue Oct 3 09:08:01 2023 -0400
+
+    added students.json to gitignore
+
+commit dba638f98395bf252f7a9a399b98fe290c6671b3
+Author: grant <debiase1@usf.edu>
+Date:   Tue Oct 3 09:07:38 2023 -0400
+
+    Added data folder with dataTypes.py and jsonwrapper.py
+
+commit efa00547488cece09e38b40e241a46812370634d
+Author: Khanh Dong <102124596+khanh-md@users.noreply.github.com>
+Date:   Sun Oct 1 23:53:06 2023 -0400
+
+    Add files via upload
+
+commit 2ab601f605276ca147587ac77af18289342abc8c
+Author: grant <debiase1@usf.edu>
+Date:   Sun Oct 1 18:39:22 2023 -0400
+
+    added comments
+
+commit 370aa64c3d0641c091508baccf9ea8d565cec039
+Author: grant <debiase1@usf.edu>
+Date:   Sun Oct 1 18:37:53 2023 -0400
+
+    Did 9 test cases
+
+commit a73d2d2194aac67bbf14e84cd456ddc8bd6af191
+Author: grant <debiase1@usf.edu>
+Date:   Sun Oct 1 18:37:18 2023 -0400
+
+    changed guestSetting to be initialized
+
+commit 9ede1d3ef0b20b9a5b5c6f248b9cf770fe7d63be
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Thu Sep 28 17:36:25 2023 -0400
+
+    fixed language toggle issue
+
+commit 69fa9904dc93b46147d5a9751ad461d49dab1595
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Thu Sep 28 17:31:25 2023 -0400
+
+    implemented guest and lanaguage controls
+
+commit 1e33c9a928cb5c89b3f01b134940468eee6a7209
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Thu Sep 28 15:20:59 2023 -0400
+
+    added toggle email
+
+commit 1c1bf2fc1bfd14e3dff26fd25846de49685c7719
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Thu Sep 28 14:28:35 2023 -0400
+
+    ignore pycache
+
+commit 9675fe8ee690445123606eec58439cf40a01ad82
+Author: ashleylclark <66217828+ashleylclark@users.noreply.github.com>
+Date:   Thu Sep 28 14:25:14 2023 -0400
+
+    Delete Project/__pycache__ directory
+
+commit 2863331bdcc0772a6915997071214366c39a3e68
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Thu Sep 28 14:15:36 2023 -0400
+
+    Added Important Links
+
+commit 315f746c9cefbf3a63e711815c7a184632eb1760
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Wed Sep 27 10:49:26 2023 -0400
+
+    removed unused var
+
+commit bef15dea71a3400c9f37dd0058584e0b59f43a9e
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Wed Sep 27 10:45:43 2023 -0400
+
+    Added comments and linting
+
+commit 92796934864a7c56d8070880d7e6b56e282752de
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Wed Sep 27 10:37:58 2023 -0400
+
+    fixed useful links function
+
+commit 35bc30b6270d1c2530899ac2c9de9d75850064b6
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Wed Sep 27 10:23:53 2023 -0400
+
+    Added General section
+    Separated Useful Links to new file
+
+commit f8fffb64b35409f43c12758b55cb32747a1271bb
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Tue Sep 26 20:41:31 2023 -0400
+
+    general link 1: sign up & changed menu set up
+
+commit 446cd8ea8d80f61839f2201a31d14af160686718
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Tue Sep 26 20:40:19 2023 -0400
+
+    added gitingore file
+
+commit c83eeb74fea595d9be851cd7f5ca80152d724886
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Tue Sep 26 18:44:39 2023 -0400
+
+    Updated code
+
+commit 228827756c81b3955e3a444749ef508525568900
+Author: Ashley Clark <ashleyclarkindy@gmail.com>
+Date:   Tue Sep 26 18:34:42 2023 -0400
+
+    Added 2 new Navigation links
+
+commit f9319fb9ce93854127edbce9c266438093a8ff9d
+Author: jrgarcia0221 <94551621+jrgarcia0221@users.noreply.github.com>
+Date:   Fri Sep 22 11:22:30 2023 -0400
+
+    First commit
+
+commit e2d2aacbc3894bf89c542cfbcb46c0ff554c4a9a
+Author: jrgarcia0221 <94551621+jrgarcia0221@users.noreply.github.com>
+Date:   Fri Sep 22 11:10:33 2023 -0400
+
+    Initial commit
