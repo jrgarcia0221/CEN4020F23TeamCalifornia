@@ -13,7 +13,7 @@ def createSetting(email="On", sms="On",targetedAdvert="On", language="English"):
 
 #Author Grant DeBiase
 #Function to create student dictionary
-def createStudent(username="JohnDoe", password="Password123!", firstname="John", lastname="Doe", major = "major", university = "uni", settings=createSetting(), friendrequest = [], friends=[]):
+def createStudent(username="JohnDoe", password="Password123!", firstname="John", lastname="Doe", major = "major", university = "uni", settings=createSetting(), friendrequest=None, friends=None):
     return {
         "username": username,
         "password": password,
@@ -22,8 +22,8 @@ def createStudent(username="JohnDoe", password="Password123!", firstname="John",
         "major": major,
         "university": university,
         "settings": settings,
-        "friendrequest": friendrequest,
-        "friends": friends
+        "friendrequest": friendrequest or [],
+        "friends": friends or []
     }
     
 #Author Grant DeBiase

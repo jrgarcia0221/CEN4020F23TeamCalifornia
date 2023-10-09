@@ -41,6 +41,10 @@ def passwordIsValid(password):
 #Creates account in database
 #Returns true if successful login
 def createAccount():
+  #Uncomment this to automatically create 3 test accounts
+  # create3TestAccounts()  
+  # return                
+
   if (databaseInterface.isFull("user")):
     print("All permitted accounts have been created, please come back later")
     return False
@@ -73,6 +77,23 @@ def createAccount():
   users_db.add(new_user)
 
   return True
+
+#Author Grant DeBiase
+#Creates 3 test accounts for testing purposes
+def create3TestAccounts():
+   for i in range(3):
+      username = "g" + str(i)
+      first = "g"
+      last = str(i)
+      major = "cs"
+      uni = "usf"
+      password = "Password123!"
+
+      databaseInterface.addGuestSettings(username)
+      databaseInterface.addStudentAccount(username, password, first, last, major, uni)
+      #json 
+      new_user = dataTypes.createStudent(username, password, first, last, major, uni)
+      users_db.add(new_user)
 
 
 #Author Grant DeBiase
