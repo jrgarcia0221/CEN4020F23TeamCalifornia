@@ -31,6 +31,22 @@ def passwordIsValid(password):
   #Password is valid
   return True
 
+#Author Grant DeBiase
+#Creates 3 test accounts for testing purposes
+def create3TestAccounts():
+   for i in range(3):
+      username = "g" + str(i)
+      first = "g"
+      last = str(i)
+      major = "cs"
+      uni = "usf"
+      password = "Password123!"
+
+      databaseInterface.addGuestSettings(username)
+      databaseInterface.addStudentAccount(username, password, first, last, major, uni)
+      #json 
+      new_user = dataTypes.createStudent(username, password, first, last, major, uni)
+      users_db.add(new_user)
 
 #Author Grant DeBiase
 # andles user create account
@@ -77,24 +93,6 @@ def createAccount():
   users_db.add(new_user)
 
   return True
-
-#Author Grant DeBiase
-#Creates 3 test accounts for testing purposes
-def create3TestAccounts():
-   for i in range(3):
-      username = "g" + str(i)
-      first = "g"
-      last = str(i)
-      major = "cs"
-      uni = "usf"
-      password = "Password123!"
-
-      databaseInterface.addGuestSettings(username)
-      databaseInterface.addStudentAccount(username, password, first, last, major, uni)
-      #json 
-      new_user = dataTypes.createStudent(username, password, first, last, major, uni)
-      users_db.add(new_user)
-
 
 #Author Grant DeBiase
 # Handles user login
