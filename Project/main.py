@@ -3,11 +3,11 @@ import menuSystem
 import usefulLinks
 import re
 import sys
-import jsonDB
+from jsonDB import jsonDB
 import dataTypes
 
 currentUser = None
-users_db = jsonDB.jsonDB("users.json")
+users_db = jsonDB("users.json")
 
 #Author Grant DeBiase
 #Returns true if password is valid
@@ -49,7 +49,7 @@ def create3TestAccounts():
       users_db.add(new_user)
 
 #Author Grant DeBiase
-# andles user create account
+# Handles user create account
 #Checks if database is full (capacity is 5)
 #User enters username - checks if student is unique
 #User enters password - checks if password is valid
@@ -57,7 +57,7 @@ def create3TestAccounts():
 #Creates account in database
 #Returns true if successful login
 def createAccount():
-  #Uncomment this to automatically create 3 test accounts
+  #Uncomment this automatically create 3 test accounts
   # create3TestAccounts()  
   # return                
 
@@ -101,6 +101,7 @@ def createAccount():
 #User enters password - checks if password is matched
 #returns true if successful login
 def login():
+  global username
   print("--------------------------------")
 
 
@@ -129,20 +130,18 @@ def login():
   global guestSettingArr
   guestSettingArr = databaseInterface.lookForGuestSetting()
 
-  usefulLinks.initializeGuestArray(guestSettingArr)
+  #usefulLinks.initializeGuestArray(guestSettingArr)
 
    
   conditions = []
-  conditions.append(jsonDB.jsonDB.createQueryCondition("username", username ))
+  conditions.append(jsonDB.createQueryCondition("username", username ))
   #returns the user
   global currentUser
   currentUser = users_db.query(conditions)[0] 
 
+  usefulLinks.initializeGuestArray(guestSettingArr, currentUser)
 
-
-  print("Login successful!")
-
-  
+  print("Login successful!")  
   friendRequest() 
 
   return True
@@ -511,13 +510,6 @@ def buildMenu():
   return root
 
 
-#Creates all databases (users, job postings)
-def createDatabases():
-  databaseInterface.createDatabase()
-  databaseInterface.createJobPostingDatabase()
-  databaseInterface.createGuestSettingsDatabase()
-
-
 # build main menu tree
 def buildMenuTree():
   menuTree = buildMenu()
@@ -526,8 +518,6 @@ def buildMenuTree():
     menuSystem.navigateMenu(menuTree, [])
 
 def main():
-  createDatabases()
-
   #Success Story
   print("Student Success Story: InCollege")
 
@@ -544,7 +534,6 @@ def main():
 
   # build menu tree
   buildMenuTree()
-
 
 if __name__ == '__main__':
   main()

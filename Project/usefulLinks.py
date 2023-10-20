@@ -1,9 +1,10 @@
 import menuSystem
 import main
 import databaseInterface
-import csvDatabase
+from jsonDB import jsonDB
 
-guestSetting = []
+guestSettingsDB = "guestSettings.json"
+users_db = "users.json"
 
 # actions for useful links
 def browseInCollege():
@@ -163,65 +164,102 @@ def brandPolicy():
   brandP += "improving our platform to better connect our communities and allow everyone to share their accomplishments and achievments to all.\n"
   return True
 
-def initializeGuestArray(guestArr):   
+def initializeGuestArray(guestArr, user):   
     global guestSetting 
+    global currentUser
     guestSetting = guestArr
+    currentUser = user
 
 def guestControls():
-  # global guestSettingArr
-  # guestSettingArr = databaseInterface.lookForGuestSetting()
-  print("Here are your current control settings")
-  print("------------------------------------------------")
-  print("E-Mail:", guestSetting[1])
-  print("SMS:", guestSetting[2])
-  print("Targeted Advertising:", guestSetting[3])
-  print("\nPlease select option below to change setting (ON/OFF)")
+  global guestSetting
+  guestSetting = databaseInterface.lookForGuestSetting()
 
+  if guestSetting:
+      print("Here are your current control settings")
+      print("------------------------------------------------")
+      print("E-Mail:", guestSetting["email"])
+      print("SMS:", guestSetting["sms"])
+      print("Targeted Advertising:", guestSetting["targetedAdvert"])
+      print("\nPlease select an option below to change the setting (On/Off)")
+  else:
+      print("User not found in guest settings.")
   return True
 
 def toggleEmail():
-  # to do it without restarting, need to read back each time func called
-  if guestSetting[1] == "On":
-    toggle = "Off"
-  else:
-    toggle = "On"
-  csvDatabase.changeRecord("guestSettings.csv", 1, guestSetting[0], toggle)
-  print("Your changes will be reflected next time system boots up.")
+  db = jsonDB("guestSettings.json")  # Initialize with the correct JSON file
+  guestSetting = db.read()  # Read the guest settings
+  username = currentUser["username"]
+
+  for index, item in enumerate(guestSetting):
+      if item.get("username") == username:
+          if item["email"] == "On":
+              toggle = "Off"
+          else:
+              toggle = "On"
+          item["email"] = toggle
+          db.update(index, item)  # Update the specific item in the JSON file
+
+  print("Your changes will be reflected next time the system boots up.")
   return True
 
+
 def toggleSMS():
-  if guestSetting[2] == "On":
-     toggle = "Off"
-  else:
-     toggle = "On"
-  csvDatabase.changeRecord("guestSettings.csv", 2, guestSetting[0], toggle)
-  print("Your changes will be reflected next time system boots up.")
+  db = jsonDB("guestSettings.json")  # Initialize with the correct JSON file
+  guestSetting = db.read()  # Read the guest settings
+  username = currentUser["username"]
+
+  for index, item in enumerate(guestSetting):
+      if item.get("username") == username:
+          if item["sms"] == "On":
+              toggle = "Off"
+          else:
+              toggle = "On"
+          item["sms"] = toggle
+          db.update(index, item)  # Update the specific item in the JSON file
+
+  print("Your changes will be reflected next time the system boots up.")
   return True
 
 def toggleTargetedAudience():
-  if guestSetting[3] == "On":
-     toggle = "Off"
-  else:
-     toggle = "On"
-  csvDatabase.changeRecord("guestSettings.csv", 3, guestSetting[0], toggle)
-  print("Your changes will be reflected next time system boots up.")
+  db = jsonDB("guestSettings.json")  # Initialize with the correct JSON file
+  guestSetting = db.read()  # Read the guest settings
+  username = currentUser["username"]
+
+  for index, item in enumerate(guestSetting):
+      if item.get("username") == username:
+          if item["targetedAdvert"] == "On":
+              toggle = "Off"
+          else:
+              toggle = "On"
+          item["targetedAdvert"] = toggle
+          db.update(index, item)  # Update the specific item in the JSON file
+
+  print("Your changes will be reflected next time the system boots up.")
   return True
 
 def languages():
   print("Here are your current language settings")
   print("------------------------------------------------")
-  print("Language:", guestSetting[4])
-  print("\nPlease select option below to change setting (English/Spanish)")
+  print("Language:", guestSetting["language"])
+  print("\nPlease select an option below to change the setting (English/Spanish)")
   return True
 
 def toggleLanguages():
-  if guestSetting[4] == "English":
-    toggle = "Spanish"
-  else:
-    toggle = "English"
-  csvDatabase.changeRecord("guestSettings.csv", 4, guestSetting[0], toggle)
-  return True
+  db = jsonDB("guestSettings.json")  # Initialize with the correct JSON file
+  guestSetting = db.read()  # Read the guest settings
+  username = currentUser["username"]
 
+  for index, item in enumerate(guestSetting):
+      if item.get("username") == username:
+          if item["language"] == "English":
+              toggle = "Spanish"
+          else:
+              toggle = "English"
+          item["email"] = toggle
+          db.update(index, item)  # Update the specific item in the JSON file
+
+  print("Your changes will be reflected next time the system boots up.")
+  return True
 
 def buildPrivacyMenu(log):
     privacyPolicyMenu = []
@@ -232,7 +270,7 @@ def buildPrivacyMenu(log):
             menuSystem.menuNode(
               "Toggle Email",
               goBack=True,
-              action=toggleEmail ),
+              action=toggleEmail),
             menuSystem.menuNode(
               "Toggle SMS",
               goBack=True,
@@ -240,7 +278,7 @@ def buildPrivacyMenu(log):
             menuSystem.menuNode(
               "Toggle Targeted Audience",
               goBack=True,
-              action=toggleTargetedAudience )
+              action=toggleTargetedAudience)
         ]))
 
     return menuSystem.menuNode("Privacy Policy", goBack=True, action=privacyPolicy, children=privacyPolicyMenu)
