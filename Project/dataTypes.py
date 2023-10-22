@@ -54,7 +54,7 @@ def createExperience(title=None, employer=None, dateStarted=None, dateEnded=None
     
 #Author Fatemah Elsewaky
 #Function to create student Education
-def createEducation(school="school", degree="degree", yearsAttended="yearsAttended"):
+def createEducation(school= None, degree= None, yearsAttended= None):
     return{
         "school": school,
         "degree": degree,
@@ -63,7 +63,7 @@ def createEducation(school="school", degree="degree", yearsAttended="yearsAttend
     
 #Author Fatemah Elsewaky
 #Function to create student "AboutMe"
-def createAboutMe(paragraph="paragraph", experience= None, education= None):
+def createAboutMe(paragraph="", experience= None, education= None):
     return{
         "paragraph": paragraph,
         "experience": experience or [],
@@ -72,7 +72,7 @@ def createAboutMe(paragraph="paragraph", experience= None, education= None):
     
 #Author Fatemah Elsewaky
 #Function to create student Profile
-def createProfile(title="title",major = "major", university = "uni", aboutMe= None):
+def createProfile(title="",major = "", university = "", aboutMe= None):
     return{
         "title": title,
         "major": major,

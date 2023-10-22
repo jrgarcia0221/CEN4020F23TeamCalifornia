@@ -409,26 +409,75 @@ def capitalizeFirstLetter(input_string):
     capitalized_words = [word.capitalize() for word in words]  # Capitalize the first letter of each word
     output_string = " ".join(capitalized_words)  # Join the words back into a string
     return output_string
+
+def manageProfile ():
+      while True:
+            # check if the user already have a profile
+            if currentUser.get("profile") and any(currentUser["profile"].values()):
+                print("\nYou already have a profile.")
+                print("1. Edit profile")
+                print("2. Create a new profile")
+                choice = input("Enter your choice (1-2): ")
+
+                if choice == "1":
+                      editProfile()
+                      break
+                elif choice == "2":
+                      createProfile()
+                      break  
+                else:
+                      print("Invalid choice. Please try again.\n")
+                      
+            else:
+                  createProfile()
+                  break
+
+                  
+def createProfile():
       
-def manageProfile():
-      print("\nCreate/Edit Profile")
+      print("\nCreate Profile")
       print("-----------------------------------------")
       
-      title = input("Enter a title: ")
-      major = input("Enter your major: ")
-      major = capitalizeFirstLetter(major)
-      university = input("Enter your university: ")
-      university = capitalizeFirstLetter(university)
+      # Initialize an empty profile
+      currentUser["profile"] = dataTypes.createProfile()
+      index = users_db.data.index(currentUser)
+      users_db.update(index, currentUser)
+      
+      title = input("Enter a title or 0 to exit: ")
+      if title == '0':
+            return 
+      currentUser["profile"]["title"] = title
+      index = users_db.data.index(currentUser)
+      users_db.update(index, currentUser)
+            
+      major = input("Enter your major or 0 to exit: ")
+      if major == '0':
+            return 
+      currentUser["profile"]["major"] = capitalizeFirstLetter(major)
+      index = users_db.data.index(currentUser)
+      users_db.update(index, currentUser)
+      
+      university = input("Enter your university or 0 to exit: ")
+      if university == '0':
+            return 
+      currentUser["profile"]["university"] = capitalizeFirstLetter(university)
+      index = users_db.data.index(currentUser)
+      users_db.update(index, currentUser)
       
       # Create aboutMe dictionary
       print("\nAbout Me:")
-      paragraph = input("Enter a brief about yourself: ")
+      paragraph = input("Enter a brief about yourself or 0 to exit: ")
+      if paragraph == '0':
+            return
+      currentUser["profile"]["aboutMe"]["paragraph"] = paragraph
+      index = users_db.data.index(currentUser)
+      users_db.update(index, currentUser)
       
       print("\nExperiences:")
       experiences = []
-      while True:
-            exp_title = input("\nEnter job title (or press Enter to skip): ")
-            if not exp_title:
+      while len(experiences)<3:
+            exp_title = input("\nEnter job title or 0 to exit: ")
+            if exp_title == '0':
                   break
             employer = input("Enter employer: ")
             date_started = input("Enter start date: ")
@@ -437,50 +486,213 @@ def manageProfile():
             description = input("Enter job description: ")
             experience = dataTypes.createExperience(exp_title, employer, date_started, date_ended, location, description)
             experiences.append(experience)
-
+            
+      currentUser["profile"]["aboutMe"]["experience"] = experiences
+      index = users_db.data.index(currentUser)
+      users_db.update(index, currentUser)
+      
       print("\nEducations:")
       educations = []
       while True:
-        school = input("\nEnter school/university name (or press Enter to skip): ")
-        if not school:
+        school = input("\nEnter school/university name or 0 to exit: ")
+        if school == '0':
             break
         degree = input("Enter degree: ")
         years_attended = input("Enter years attended: ")
         education = dataTypes.createEducation(school, degree, years_attended)
         educations.append(education)
-
-      about_me = dataTypes.createAboutMe(paragraph, experiences, educations)
-      profile = dataTypes.createProfile(title, major, university, about_me)
-
-      currentUser["profile"] = profile
+        
+      currentUser["profile"]["aboutMe"]["education"] = educations
       index = users_db.data.index(currentUser)
-      users_db.update(index, currentUser)
+      users_db.update(index, currentUser) 
+      
       print("Profile created/updated successfully!")
       
-      print("\nWould you like to view your profile?")
-      print("1. Yes")
-      print("2. No")
-      choice = input("Enter your choice (1-2): ")
+      while True:
+        print("\nWould you like to view your profile?")
+        print("1. Yes")
+        print("2. No")
+        choice = input("Enter your choice (1-2): ")
 
-      if choice == "1":
-            if "profile" in currentUser:
-                  full_name = f"{currentUser['firstname']} {currentUser['lastname']}"
-                  viewProfile(currentUser["profile"],full_name)
-            else:
-                print("Profile not found. Please create your profile first.")
-                
-      elif choice == "2":
-            return True
-      else:
+        if choice == "1":
+              if "profile" in currentUser:
+                    full_name = f"{currentUser['firstname']} {currentUser['lastname']}"
+                    viewProfile(currentUser["profile"],full_name)
+              else:
+                  print("Profile not found. Please create your profile first.")
+                  
+        elif choice == "2":
+              break
+        else:
+              print("Invalid choice. Please try again.")
+
+def editProfile():
+
+    print("\nEdit Profile")
+    print("-----------------------------------------")
+    
+
+    while True:
+        full_name = f"{currentUser['firstname']} {currentUser['lastname']}"
+        viewProfile(currentUser["profile"],full_name)
+        
+        print("\nProfile Options:")
+        print("1. Edit Title")
+        print("2. Edit Major")
+        print("3. Edit University")
+        print("4. Edit About Me pargraph")
+        print("5. Edit Experiences")
+        print("6. Edit Education")
+        print("7. Go Back")
+        choice = input("Enter your choice (1-7): ")
+
+        if choice == "1":
+            currentUser["profile"]["title"] = input("Enter a new title: ")
+            index = users_db.data.index(currentUser)
+            users_db.update(index, currentUser)
+        elif choice == "2":
+            currentUser["profile"]["major"] = capitalizeFirstLetter(input("Enter updated major: "))
+            index = users_db.data.index(currentUser)
+            users_db.update(index, currentUser)
+        elif choice == "3":
+            currentUser["profile"]["university"] = capitalizeFirstLetter(input("Enter updated university: "))
+            index = users_db.data.index(currentUser)
+            users_db.update(index, currentUser)
+        elif choice == "4":
+              currentUser["profile"]["aboutMe"]["paragraph"] = input("Enter new paragraph: ")
+              index = users_db.data.index(currentUser)
+              users_db.update(index, currentUser)
+        elif choice == "5":
+              editExperiences()
+        elif choice == "6":
+              editEducation()
+        elif choice == "7":
+            break
+        else:
             print("Invalid choice. Please try again.")
-  
+            continue
+          
+        print("\nProfile updated successfully!")
+        
+def editExperiences():
+    experiences = currentUser["profile"]["aboutMe"]["experience"]
+    while True:
+        print("\nExperiences:")
+        for i, experience in enumerate(experiences, start=1):
+            print(f"{i}. {experience['title']} at {experience['employer']}")
+        print("\na. Add Experience")
+        print("b. Edit Experience")
+        print("c. Delete Experience")
+        print("d. Go Back")
+        choice = input("Enter your choice (a-d): ")
+
+        if choice == "a":
+            if len(experiences) >= 3:
+                print("You can't add more than 3 experiences.")
+            else:
+                title = input("Enter job title: ")
+                employer = input("Enter employer: ")
+                location = input("Enter location: ")
+                dateStarted = input("Enter start date: ")
+                dateEnded = input("Enter end date: ")
+                description = input("Enter job description: ")
+                experience = dataTypes.createExperience(title, employer, dateStarted, dateEnded, location, description)
+                experiences.append(experience)
+        elif choice == "b":
+            # check if there is no existing Experience
+            if not experiences:
+                print("No Experience records found to edit.")
+                continue
+            index = input("Enter the number of the experience to edit: ")
+            if index.isdigit() and 1 <= int(index) <= len(experiences):
+                index = int(index) - 1
+                title = input("Enter new job title: ")
+                employer = input("Enter new employer: ")
+                location = input("Enter new location: ")
+                dateStarted = input("Enter new start date: ")
+                dateEnded = input("Enter new end date: ")
+                description = input("Enter new job description: ")
+                experiences[index] = dataTypes.createExperience(title, employer, dateStarted, dateEnded, location, description)
+                print("Experience updated successfully.")
+            else:
+                print("Invalid input. Please enter a valid number.")
+        elif choice == "c":
+            # check if there is no existing Experience
+            if not experiences:
+                print("No Experience records found to delete.")
+                continue
+            index = input("Enter the number of the experience to delete: ")
+            if index.isdigit() and 1 <= int(index) <= len(experiences):
+                del experiences[int(index) - 1]
+            else:
+                print("Invalid input. Please enter a valid number.")
+        elif choice == "d":
+            break
+        else:
+            print("Invalid choice. Please try again.")
+            
+        currentUser["profile"]["aboutMe"]["experience"] = experiences
+        index = users_db.data.index(currentUser)
+        users_db.update(index, currentUser)
+
+def editEducation():
+    educations = currentUser["profile"]["aboutMe"]["education"]
+    while True:
+        print("\nEducation:")
+        for i, education in enumerate(educations, start=1):
+            print(f"{i}. {education['school']}, {education['degree']}")
+        print("a. Add Education")
+        print("b. Edit Education")
+        print("c. Delete Education")
+        print("d. Go Back")
+        choice = input("Enter your choice (a-d): ")
+
+        if choice == "a":
+            school = input("Enter school/university name: ")
+            degree = input("Enter degree: ")
+            yearsAttended = input("Enter years attended: ")
+            education = dataTypes.createEducation(school, degree, yearsAttended)
+            educations.append(education)
+        elif choice == "b":
+            # check if there is no existing education
+            if not educations:
+                print("No education records found to edit.")
+                continue
+            index = input("Enter the number of the education to edit: ")
+            if index.isdigit() and 1 <= int(index) <= len(educations):
+                index = int(index) - 1
+                school = input("Enter new school/university name: ")
+                degree = input("Enter new degree: ")
+                yearsAttended = input("Enter new years attended: ")
+                educations[index] = dataTypes.createEducation(school, degree, yearsAttended)
+                print("Education updated successfully.")
+            else:
+                print("Invalid input. Please enter a valid number.")
+        elif choice == "c":
+            # check if there is no existing education
+            if not educations:
+                print("No education records found to delete.")
+                continue
+            index = input("Enter the number of the education to delete: ")
+            if index.isdigit() and 1 <= int(index) <= len(educations):
+                del educations[int(index) - 1]
+            else:
+                print("Invalid input. Please enter a valid number.")
+        elif choice == "d":
+            break
+        else:
+            print("Invalid choice. Please try again.")
+            
+        currentUser["profile"]["aboutMe"]["education"] = educations
+        index = users_db.data.index(currentUser)
+        users_db.update(index, currentUser)
 
 def callviewProfile():
     while True:
         print("-----------------------------------------")
         print("Which profile would you like to view?")
-        print("1.Your Profile")
-        print("2.Friend's Profile")
+        print("1.View My Profile")
+        print("2.Look up a Friend's Profile")
         print("3.Go back")
         choice = input("Enter your choice (1-3): ")
         print("-----------------------------------------")
@@ -497,7 +709,7 @@ def callviewProfile():
               
             if not currentUser["friends"]:
               print("You have no connections")
-              return True
+              return
             
             print("List of Friends:")
             for x, friend in enumerate(currentUser["friends"], start=1):
@@ -536,9 +748,7 @@ def getUserFullName(username):
         if user["username"] == username:
             full_name = f"{user['firstname']} {user['lastname']}"
             return full_name
-        
-
-      
+           
 def viewProfile(profile, full_name):
     print(f"\n{full_name}'s Profile\n")
     
