@@ -145,8 +145,8 @@ def test_showNetworkOption():
     def mock_login():
         return True
     
-    with patch('main.login', side_effect=mock_login):
-        navigation(["2"], ["Show my Network"])
+    with patch('main.Login', side_effect=mock_login):
+        navigation(["2"], ["Show my Networ"])
 
 # Author Ashley
 def test_lastNameLookup_found(capfd):

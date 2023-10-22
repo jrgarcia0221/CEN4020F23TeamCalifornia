@@ -26,6 +26,8 @@ def navigation(userInputs, expectedLabels):
                 buildMenuTree()
             except StopIteration:
                 pass
+    for expectedLabel in expectedLabels:
+        assert any(expectedLabel in output for output in consoleOutput)
 
 def test_createExperience():
   expected_output = {'title': 'Analyst', 'employer': 'InCollege', 'dateStarted': 'June 6, 2020', 'dateEnded': 'May 12, 2023', 'location': 'CA', 'description': 'Analyze data'}
@@ -65,12 +67,26 @@ def test_capitalizeFirstLetterOfUniversity2():
   output = capitalizeFirstLetter("hiLlsboroUGH coMMunity CoLLEGE")
   assert expected_output == output
 
-def test_showNetworkOption():
+def test_showMyProfileOption():
     def mock_login():
       return True
     
     with patch('main.login', side_effect=mock_login):
-      navigation(["7"], ["My Profile"])
+      navigation(["2"], ["My Profile"])
+
+def test_showOptionsInProfile():
+    def mock_login():
+      return True
+    
+    with patch('main.login', side_effect=mock_login):
+      navigation(["2", "7"], ["Create/Manage Profile", "View Profile"])
+
+def test_viewProfileViewOption():
+    def mock_login():
+      return True
+    
+    with patch('main.login', side_effect=mock_login):
+      navigation(["2", "7", "2"], ["View My Profile", "Look up a Friend's Profile"])
 
 
 def readDB(db):
