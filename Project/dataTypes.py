@@ -13,7 +13,7 @@ def createSetting(email="On", sms="On",targetedAdvert="On", language="English"):
 
 #Author Grant DeBiase
 #Function to create student dictionary
-def createStudent(username="JohnDoe", password="Password123!", firstname="John", lastname="Doe", major = "major", university = "uni", settings=createSetting(), friendrequest=None, friends=None):
+def createStudent(username="JohnDoe", password="Password123!", firstname="John", lastname="Doe", major = "major", university = "uni", settings= None, friendrequest=None, friends=None, profile=None):
     return {
         "username": username,
         "password": password,
@@ -21,9 +21,10 @@ def createStudent(username="JohnDoe", password="Password123!", firstname="John",
         "lastname": lastname,
         "major": major,
         "university": university,
-        "settings": settings,
+        "settings": settings or createSetting(),
         "friendrequest": friendrequest or [],
-        "friends": friends or []
+        "friends": friends or [],
+        "profile": profile or {}
     }
     
 #Author Grant DeBiase
@@ -37,4 +38,44 @@ def createJob(title="title", description="description", employer="employer", loc
         "salary": salary,
         "firstname": firstname,
         "lastname": lastname
+    }
+    
+#Author Fatemah Elsewaky
+#Function to create student Experience
+def createExperience(title=None, employer=None, dateStarted=None, dateEnded=None, location=None, description=None):
+    return{
+        "title": title,
+        "employer": employer,
+        "dateStarted": dateStarted,
+        "dateEnded": dateEnded,
+        "location": location,
+        "description": description
+    }
+    
+#Author Fatemah Elsewaky
+#Function to create student Education
+def createEducation(school="school", degree="degree", yearsAttended="yearsAttended"):
+    return{
+        "school": school,
+        "degree": degree,
+        "yearsAttended": yearsAttended  
+    }
+    
+#Author Fatemah Elsewaky
+#Function to create student "AboutMe"
+def createAboutMe(paragraph="paragraph", experience= None, education= None):
+    return{
+        "paragraph": paragraph,
+        "experience": experience or [],
+        "education": education or []
+    }
+    
+#Author Fatemah Elsewaky
+#Function to create student Profile
+def createProfile(title="title",major = "major", university = "uni", aboutMe= None):
+    return{
+        "title": title,
+        "major": major,
+        "university": university,
+        "aboutMe": aboutMe or createAboutMe()
     }

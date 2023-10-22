@@ -278,10 +278,6 @@ def sendFriendRequest(matching_students):
             users_db.update(index, student)
 
 
-            
-
-
-
 def acceptFriendRequest(friend):
     print(f"Accepting friend request from {friend}.")
     # Update sender's friend list
@@ -373,7 +369,6 @@ def displayFriendsList():
         print("Invalid choice. Please try again.")
 
 
-
 def unfriendUser():
     print("\nYour Friends List")
     print("-----------------------------------------")
@@ -409,7 +404,175 @@ def unfriendUser():
         print("Invalid input. Please enter a number.")
 
 
+def capitalizeFirstLetter(input_string):
+    words = input_string.split()  # Split the input string into words
+    capitalized_words = [word.capitalize() for word in words]  # Capitalize the first letter of each word
+    output_string = " ".join(capitalized_words)  # Join the words back into a string
+    return output_string
+      
+def manageProfile():
+      print("\nCreate/Edit Profile")
+      print("-----------------------------------------")
+      
+      title = input("Enter a title: ")
+      major = input("Enter your major: ")
+      major = capitalizeFirstLetter(major)
+      university = input("Enter your university: ")
+      university = capitalizeFirstLetter(university)
+      
+      # Create aboutMe dictionary
+      print("\nAbout Me:")
+      paragraph = input("Enter a brief about yourself: ")
+      
+      print("\nExperiences:")
+      experiences = []
+      while True:
+            exp_title = input("\nEnter job title (or press Enter to skip): ")
+            if not exp_title:
+                  break
+            employer = input("Enter employer: ")
+            date_started = input("Enter start date: ")
+            date_ended = input("Enter end date: ")
+            location = input("Enter location: ")
+            description = input("Enter job description: ")
+            experience = dataTypes.createExperience(exp_title, employer, date_started, date_ended, location, description)
+            experiences.append(experience)
 
+      print("\nEducations:")
+      educations = []
+      while True:
+        school = input("\nEnter school/university name (or press Enter to skip): ")
+        if not school:
+            break
+        degree = input("Enter degree: ")
+        years_attended = input("Enter years attended: ")
+        education = dataTypes.createEducation(school, degree, years_attended)
+        educations.append(education)
+
+      about_me = dataTypes.createAboutMe(paragraph, experiences, educations)
+      profile = dataTypes.createProfile(title, major, university, about_me)
+
+      currentUser["profile"] = profile
+      index = users_db.data.index(currentUser)
+      users_db.update(index, currentUser)
+      print("Profile created/updated successfully!")
+      
+      print("\nWould you like to view your profile?")
+      print("1. Yes")
+      print("2. No")
+      choice = input("Enter your choice (1-2): ")
+
+      if choice == "1":
+            if "profile" in currentUser:
+                  full_name = f"{currentUser['firstname']} {currentUser['lastname']}"
+                  viewProfile(currentUser["profile"],full_name)
+            else:
+                print("Profile not found. Please create your profile first.")
+                
+      elif choice == "2":
+            return True
+      else:
+            print("Invalid choice. Please try again.")
+  
+
+def callviewProfile():
+    while True:
+        print("-----------------------------------------")
+        print("Which profile would you like to view?")
+        print("1.Your Profile")
+        print("2.Friend's Profile")
+        print("3.Go back")
+        choice = input("Enter your choice (1-3): ")
+        print("-----------------------------------------")
+
+        if choice == "1":
+            if "profile" in currentUser:
+                full_name = f"{currentUser['firstname']} {currentUser['lastname']}"
+                viewProfile(currentUser["profile"],full_name)
+            else:
+                print("Profile not found. Please create your profile first.") 
+            
+            
+        elif choice == "2":
+              
+            if not currentUser["friends"]:
+              print("You have no connections")
+              return True
+            
+            print("List of Friends:")
+            for x, friend in enumerate(currentUser["friends"], start=1):
+                print(f"{x}. {friend}")
+                
+            friend_choice = input(f"\nSelect a friend to view their profile (1-{len(currentUser['friends'])}) or enter '0' to go back: ")
+            try:
+                friend_index = int(friend_choice) - 1
+                if 0 <= friend_index < len(currentUser["friends"]):
+                    friend_username = currentUser["friends"][friend_index]
+                    friend_profile = getUserProfile(friend_username)
+                    if friend_profile:
+                        full_name = getUserFullName(friend_username)
+                        viewProfile(friend_profile, full_name)
+                    else:
+                        print("Friend does not have a profile.")
+                elif friend_index == -1:
+                    break
+                else:
+                    print("Invalid choice. Please try again.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+        elif choice == "3":
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+def getUserProfile(username):
+    for user in users_db.data:
+        if user["username"] == username and "profile" in user:
+            return user["profile"]
+    return None
+  
+def getUserFullName(username):
+    for user in users_db.data:
+        if user["username"] == username:
+            full_name = f"{user['firstname']} {user['lastname']}"
+            return full_name
+        
+
+      
+def viewProfile(profile, full_name):
+    print(f"\n{full_name}'s Profile\n")
+    
+    name_padding = (100 - len(full_name)) // 2
+    print(f"{'-'*100}")
+    print(f"{' '*name_padding}{full_name}{' '*name_padding}")
+    print(f"{'-'*100}")
+    
+    print(f"\n{'Title:':<10} {profile['title']:^20}")
+    print(f"{'Major:':<10} {profile['major']:^20}")
+    print(f"{'University:':<10} {profile['university']:^20}")
+    print(f"{'-'*50}")
+    
+    print("\nAbout Me:")
+    print(f"{profile['aboutMe']['paragraph']}\n")
+    
+    print("Experiences:")
+    print(f"{'-'*50}")
+    
+    for exp in profile['aboutMe']['experience']:
+        print(f"- Title: {exp['title']} at {exp['employer']}")
+        print(f"  Employer: {exp['employer']}")
+        print(f"  Start Date: {exp['dateStarted']} | End Date: {exp['dateEnded']}")
+        print(f"  Location: {exp['location']}")
+        print(f"  Description: {exp['description']}\n")
+
+        
+    print("\nEducations:")
+    print(f"{'-'*50}")
+
+    for edu in profile['aboutMe']['education']:
+        print(f"- School: {edu['school']}")
+        print(f"  Degree: {edu['degree']}")
+        print(f"  Years Attended: {edu['yearsAttended']}\n")
 
 
 #Author Grant DeBiase
@@ -491,7 +654,18 @@ def buildMenu():
                                               action=learnSkill)
                       ]),
                   usefulLinks.buildUsefulLinksMenu(True),
-                  usefulLinks.buildImportantLinksMenu(True)
+                  usefulLinks.buildImportantLinksMenu(True),
+                  menuSystem.menuNode(
+                      "My Profile",
+                      goBack=True,
+                      children=[
+                          menuSystem.menuNode("Create/Manage Profile",
+                                              goBack=True,
+                                              action=manageProfile),
+                          menuSystem.menuNode("View Profile",
+                                              goBack=True,
+                                              action=callviewProfile)  
+                  ])
               ]),
           menuSystem.menuNode("Student Lookup",
                               goBack=True,
