@@ -5,12 +5,27 @@ import json
 import databaseInterface
 from databaseInterface import addStudentAccount, studentNameExists, getPassword, login, addGuestSettings, getCurrentUser, lookForGuestSetting, addJobPost, readJobPosts, displayJobs
 from dataTypes import createExperience, createEducation, createAboutMe, createProfile
-from main import capitalizeFirstLetter
+from main import capitalizeFirstLetter, buildMenuTree, main, watchVideo, studentLookup, createAccount, passwordIsValid, postJobAction, sendFriendRequest
+import sys
+from io import StringIO
+import main
 
 # test new functions in dataTypes
 experienceOutput = createExperience('Analyst', 'InCollege', 'June 6, 2020', 'May 12, 2023', 'CA', 'Analyze data')
 educationOutput = createEducation('USF', 'BSCS', '2018-2022')
 aboutMeOutput = createAboutMe("I am an Analyst...", experienceOutput, educationOutput)
+
+def navigation(userInputs, expectedLabels):
+    # Keeps track of all console outputs
+    consoleOutput = []
+    
+    with patch('builtins.input', side_effect=userInputs):
+        with patch('builtins.print', side_effect=lambda *args, **kwargs: consoleOutput.append(" ".join(map(str, args)))):
+            
+            try: 
+                buildMenuTree()
+            except StopIteration:
+                pass
 
 def test_createExperience():
   expected_output = {'title': 'Analyst', 'employer': 'InCollege', 'dateStarted': 'June 6, 2020', 'dateEnded': 'May 12, 2023', 'location': 'CA', 'description': 'Analyze data'}
@@ -34,6 +49,28 @@ def test_capitalizeFirstLetter():
   expected_output = "Computer Science"
   output = capitalizeFirstLetter("compuTER sCIENCE")
   assert expected_output == output
+
+def test_capitalizeFirstLetter1():
+  expected_output = "Computer Engineering"
+  output = capitalizeFirstLetter("comPuTer ENGINEERING")
+  assert expected_output == output
+
+def test_capitalizeFirstLetterOfUniversity():
+  expected_output = "University Of South Florida"
+  output = capitalizeFirstLetter("university of south florida")
+  assert expected_output == output
+
+def test_capitalizeFirstLetterOfUniversity2():
+  expected_output = "Hillsborough Community College"
+  output = capitalizeFirstLetter("hiLlsboroUGH coMMunity CoLLEGE")
+  assert expected_output == output
+
+def test_showNetworkOption():
+    def mock_login():
+      return True
+    
+    with patch('main.login', side_effect=mock_login):
+      navigation(["7"], ["My Profile"])
 
 
 def readDB(db):
