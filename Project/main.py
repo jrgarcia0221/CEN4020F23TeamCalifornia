@@ -88,6 +88,8 @@ def createAccount():
   uni = input("Enter your university: ")
   databaseInterface.addGuestSettings(username)
   databaseInterface.addStudentAccount(username, password, first, last, major, uni)
+  global users_db 
+  users_db = jsonDB("users.json")
 
   return True
 
