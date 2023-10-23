@@ -470,8 +470,8 @@ def createProfile():
       print("-----------------------------------------")
       
       # Initialize an empty profile
-      currentUser["profile"] = dataTypes.createProfile()
       index = users_db.data.index(currentUser)
+      currentUser["profile"] = dataTypes.createProfile()      
       users_db.update(index, currentUser)
       
       title = input("Enter a title or 0 to exit: ")
