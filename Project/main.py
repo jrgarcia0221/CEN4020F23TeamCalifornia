@@ -97,82 +97,82 @@ def createAccount():
 #User enters username - checks if student exists in database
 #User enters password - checks if password is matched
 #returns true if successful login
-# def login():
-#   global username
-#   print("--------------------------------")
+def login():
+  global username
+  print("--------------------------------")
 
-#   if databaseInterface.isEmpty("user"):
-#     print("There are no existing accounts to log into.")
-#     return False
+  if databaseInterface.isEmpty("user"):
+    print("There are no existing accounts to log into.")
+    return False
 
-#   while True:
-#     username = input("Enter your username: ")
-#     if databaseInterface.studentExists(username):
-#       break
-#     else:
-#       print("Invalid Username. Please try again.")
+  while True:
+    username = input("Enter your username: ")
+    if databaseInterface.studentExists(username):
+      break
+    else:
+      print("Invalid Username. Please try again.")
 
-#   while True:
-#     password = input("Enter your password: ")
-#     if databaseInterface.login(username, password):
-#       break
-#     else:
-#       print("Invalid Password. Please try again.")
+  while True:
+    password = input("Enter your password: ")
+    if databaseInterface.login(username, password):
+      break
+    else:
+      print("Invalid Password. Please try again.")
 
-#   # save logged in user
-#   databaseInterface.getCurrentUser(username)
+  # save logged in user
+  databaseInterface.getCurrentUser(username)
 
-#   global guestSettingArr
-#   guestSettingArr = databaseInterface.lookForGuestSetting()
+  global guestSettingArr
+  guestSettingArr = databaseInterface.lookForGuestSetting()
 
-#   #usefulLinks.initializeGuestArray(guestSettingArr)
+  #usefulLinks.initializeGuestArray(guestSettingArr)
 
    
-#   conditions = []
-#   conditions.append(jsonDB.createQueryCondition("username", username ))
-#   #returns the user
-#   global currentUser
-#   currentUser = users_db.query(conditions)[0] 
+  conditions = []
+  conditions.append(jsonDB.createQueryCondition("username", username ))
+  #returns the user
+  global currentUser
+  currentUser = users_db.query(conditions)[0] 
 
-#   usefulLinks.initializeGuestArray(guestSettingArr, currentUser)
+  usefulLinks.initializeGuestArray(guestSettingArr, currentUser)
 
-#   print("Login successful!")  
-#   friendRequest() 
+  print("Login successful!")  
+  friendRequest() 
 
-#   return True
+  return True
 
-def login():
-    global currentUser, username, guestSettingArr
+# def login():
+#     global currentUser, username, guestSettingArr
 
-    print("--------------------------------")
+#     print("--------------------------------")
 
-    if databaseInterface.isEmpty("user"):
-        print("There are no existing accounts to log into.")
-        return False
+#     if databaseInterface.isEmpty("user"):
+#         print("There are no existing accounts to log into.")
+#         return False
 
-    while True:
-        username = input("Enter your username: ")
-        if databaseInterface.studentExists(username):
-            break
-        else:
-            print("Invalid Username. Please try again.")
+#     while True:
+#         username = input("Enter your username: ")
+#         if databaseInterface.studentExists(username):
+#             break
+#         else:
+#             print("Invalid Username. Please try again.")
 
-    while True:
-        password = input("Enter your password: ")
-        if databaseInterface.login(username, password):
-            # Save logged in user
-            currentUser = databaseInterface.getCurrentUser(username)
-            if currentUser:
-                guestSettingArr = databaseInterface.lookForGuestSetting()
-                usefulLinks.initializeGuestArray(guestSettingArr, currentUser)
-                print("Login successful!")
-                friendRequest()
-                return True
-            else:
-                print("Error: Unable to retrieve user data.")
-                return False
-        else:
-            print("Invalid Password. Please try again.")
+#     while True:
+#         password = input("Enter your password: ")
+#         if databaseInterface.login(username, password):
+#             # Save logged in user
+#             currentUser = databaseInterface.getCurrentUser(username)
+#             if currentUser:
+#                 guestSettingArr = databaseInterface.lookForGuestSetting()
+#                 usefulLinks.initializeGuestArray(guestSettingArr, currentUser)
+#                 print("Login successful!")
+#                 friendRequest()
+#                 return True
+#             else:
+#                 print("Error: Unable to retrieve user data.")
+#                 return False
+#         else:
+#             print("Invalid Password. Please try again.")
 
   
 def learnSkill():

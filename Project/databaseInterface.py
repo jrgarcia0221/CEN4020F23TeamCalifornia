@@ -87,6 +87,18 @@ def lookForGuestSetting():
     return None
 
 # current user
+# def getCurrentUser(user):
+#     global currentUser
+#     db = jsonDB(usersDB)
+#     conditions = [jsonDB.createQueryCondition("username", user)]
+#     user_record = db.query(conditions)
+#     if user_record:
+#         currentUser = user_record[0]
+#         return currentUser
+#     else:
+#         print(f"User '{user}' not found in the database.")
+#         return None
+
 def getCurrentUser(user):
     global currentUser
     db = jsonDB(usersDB)
@@ -94,10 +106,9 @@ def getCurrentUser(user):
     user_record = db.query(conditions)
     if user_record:
         currentUser = user_record[0]
-        return currentUser
     else:
         print(f"User '{user}' not found in the database.")
-        return None
+
         
 # Adds job posting
 def addJobPost(title, desc, employer, location, salary):
