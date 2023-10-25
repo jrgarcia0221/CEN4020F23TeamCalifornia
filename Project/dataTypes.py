@@ -11,7 +11,7 @@ def createSetting(email="On", sms="On",targetedAdvert="On", language="English"):
     }    
 
 
-#Author Grant DeBiase
+#Author Grant DeBiase.
 #Function to create student dictionary
 def createStudent(username="JohnDoe", password="Password123!", firstname="John", lastname="Doe", major = "major", university = "uni", settings= None, friendrequest=None, friends=None, profile=None):
     return {
