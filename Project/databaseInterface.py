@@ -112,11 +112,10 @@ def getCurrentUser(user):
         
 # Adds job posting
 def addJobPost(title, desc, employer, location, salary):
-    db = jsonDB(jobsDB)
-    job = createJob(title, desc, employer, location, salary, currentUser['firstname'], currentUser['lastname'])
+    db = jsonDB(jobsDB)    
+    job = createJob(title, desc, employer, location, salary, currentUser['firstname'], currentUser['lastname'], currentUser['username'])
     if not isFull("job"):
-        db.add(job)
-        return True
+        db.add(job)        
     return False
 
 # Read current posted jobs

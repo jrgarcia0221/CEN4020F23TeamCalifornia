@@ -8,6 +8,7 @@ import dataTypes
 
 currentUser = None
 users_db = jsonDB("users.json")
+jobs_db = jsonDB("jobs.json")
 
 #Author Grant DeBiase
 #Returns true if password is valid
@@ -205,7 +206,36 @@ def postJobAction():
   salary = input("Salary: ")
 
   databaseInterface.addJobPost(title, desc, employer, location, salary)
-  return True
+  global jobs_db 
+  jobs_db = jsonDB("jobs.json")
+
+  global postedJobs 
+  postedJobs = databaseInterface.readJobPosts()
+
+  return False
+
+#Author Grant DeBiase
+def deleteJobAction():
+    print("--------------------------------")
+    currentUsername = currentUser['username']
+    myJobs = jobs_db.query([jsonDB.createQueryCondition("postedby", currentUsername)])
+
+    i = 0
+    for myJob in myJobs:
+        i = i + 1
+        print(f"Enter {i} to delete job - {myJob['title']}")        
+
+    if i > 0:
+        ans = input("Enter number: ")
+
+        if (int(ans)>=1 and int(ans)<=i):
+            jobToDelete = myJobs[int(ans)-1]
+            jobToDeleteIndex = jobs_db.read().index(jobToDelete)
+            jobs_db.delete(jobToDeleteIndex)
+    else:
+        print("You have no jobs to delete")
+
+    return False
 
 
 def watchVideo():
@@ -874,7 +904,11 @@ def buildMenu():
                                           menuSystem.menuNode(
                                               "Post a job",
                                               goBack=True,
-                                              action=postJobAction)
+                                              action=postJobAction),
+                                              menuSystem.menuNode(
+                                              "Delete a job",
+                                              goBack=True,
+                                              action=deleteJobAction)
                                       ]),
                   menuSystem.menuNode(
                       "Learn a skill",

@@ -29,7 +29,7 @@ def createStudent(username="JohnDoe", password="Password123!", firstname="John",
     
 #Author Grant DeBiase
 #Function to create job dictionary
-def createJob(title="title", description="description", employer="employer", location="location", salary="salary", firstname="John", lastname="Doe"):
+def createJob(title="title", description="description", employer="employer", location="location", salary="salary", firstname="John", lastname="Doe", postedby=""):
     return {
         "title": title,
         "description": description,
@@ -37,7 +37,8 @@ def createJob(title="title", description="description", employer="employer", loc
         "location": location,
         "salary": salary,
         "firstname": firstname,
-        "lastname": lastname
+        "lastname": lastname,
+        "postedby" : postedby
     }
     
 #Author Fatemah Elsewaky

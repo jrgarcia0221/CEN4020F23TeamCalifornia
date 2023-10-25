@@ -104,9 +104,9 @@ class jsonDB:
     def delete(self, index):
         #if index is out of range
         if not (0 <= index < len(self.data)):
-            raise IndexError("Index out of range")
-        
-        del self.data[index]    
+            raise IndexError("Index out of range")        
+        del self.data[index]  
+        jsonWrapper.serializeToFile(self.data, self.fileName)  
 
     #Author Grant DeBiase
     #clears all data
