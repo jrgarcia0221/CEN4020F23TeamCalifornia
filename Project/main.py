@@ -215,6 +215,7 @@ def postJobAction():
   return False
 
 #Author Grant DeBiase
+#Note - not in use
 def deleteJobAction():
     print("--------------------------------")
     currentUsername = currentUser['username']
@@ -234,6 +235,92 @@ def deleteJobAction():
             jobs_db.delete(jobToDeleteIndex)
     else:
         print("You have no jobs to delete")
+
+    return False
+
+#Author Grant DeBiase
+def handleDeleteJob(job, index):    
+    jobs_db.delete(index)
+
+#Author Grant DeBiase
+def handleSaveJob(job, index):
+    job["savedby"].append(currentUser["username"])
+    jobs_db.update(index, job)
+
+#Author Grant DeBiase
+def handleUnSaveJob(job, index):
+    job["savedby"].remove(currentUser["username"])
+    jobs_db.update(index, job)
+
+#Author Grant DeBiase
+def handleApplyJob(job, index):
+    gradDate = input("Enter Graduation Date: ")
+    workDate = input("Enter Date You Can Start Working: ")
+    paragraph = input("Enter paragraph on why you think you would be a good fit for this job: ")
+
+    application = dataTypes.createJobApplication(gradDate, workDate, paragraph, currentUser["username"])
+
+    job["applications"].append(application)
+    jobs_db.update(index, job)
+
+#Author Grant DeBiase
+#Lets user select a job
+def selectJobAction():
+    i = 0
+    for job in jobs_db.read():
+        i = i + 1
+        print(f"Enter {i} to select job - {job['title']}")    
+
+    if i > 0:
+        ans = input("Enter number: ")
+        ans = int(ans)
+
+        if (ans>=1 and ans<=i):
+            selectedJobIndex = ans - 1
+            selectedJob = jobs_db.read(selectedJobIndex)
+
+            print (f"Selected job: {selectedJob['title']} {selectedJob['description']} {selectedJob['employer']} {selectedJob['location']} {selectedJob['salary']}")
+
+            delFlag = False
+            saveFlag = False
+            applyFlag = False
+            unSaveFlag = False
+            user = currentUser["username"]
+            if (user == selectedJob["postedby"]):
+                print("Enter del to delete job")
+                delFlag = True
+            else:
+                if (not user in selectedJob["savedby"]):
+                    print ("Enter save to save job for later")
+                    saveFlag = True
+
+                if (user in selectedJob["savedby"]):
+                    print ("Enter unsave to unsave job")
+                    unSaveFlag = True
+
+                jobApplications = selectedJob["applications"]
+                userInApplicationlist = any(obj.get("applicantUsername") == username for obj in jobApplications)
+                if (not userInApplicationlist):
+                    print("Enter apply to apply to job")
+                    applyFlag = True
+
+            if (delFlag or saveFlag or applyFlag or unsaveFlag):
+                ans = input("Enter value or back to go back: ")
+
+                if (ans == "del"):
+                    handleDeleteJob(selectedJob, selectedJobIndex)
+                elif (ans == "save"):
+                    handleSaveJob(selectedJob, selectedJobIndex)
+                elif (ans == "unsave"):
+                    handleUnSaveJob(selectedJob, selectedJobIndex)
+                elif (ans == "apply"):
+                    handleApplyJob(selectedJob, selectedJobIndex)
+                elif (ans == "back"):
+                    return False
+                else:
+                    print ("Invalid Value")
+    else:
+        print("There are no job postings")
 
     return False
 
@@ -904,11 +991,11 @@ def buildMenu():
                                           menuSystem.menuNode(
                                               "Post a job",
                                               goBack=True,
-                                              action=postJobAction),
+                                              action=postJobAction),                                              
                                               menuSystem.menuNode(
-                                              "Delete a job",
+                                              "Select a job",
                                               goBack=True,
-                                              action=deleteJobAction)
+                                              action=selectJobAction)
                                       ]),
                   menuSystem.menuNode(
                       "Learn a skill",

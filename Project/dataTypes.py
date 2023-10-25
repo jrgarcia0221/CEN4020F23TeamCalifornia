@@ -26,10 +26,18 @@ def createStudent(username="JohnDoe", password="Password123!", firstname="John",
         "friends": friends or [],
         "profile": profile or {}
     }
+
+def createJobApplication(gradDate="", workDate="", paragraph="", applicantUsername=""):
+    return {
+        "gradDate" : gradDate,
+        "workDate" : workDate,
+        "paragraph" : paragraph,
+        "applicantUsername" : applicantUsername
+    }
     
 #Author Grant DeBiase
 #Function to create job dictionary
-def createJob(title="title", description="description", employer="employer", location="location", salary="salary", firstname="John", lastname="Doe", postedby=""):
+def createJob(title="title", description="description", employer="employer", location="location", salary="salary", firstname="John", lastname="Doe", postedby="", applications=None, savedby=None):
     return {
         "title": title,
         "description": description,
@@ -38,7 +46,9 @@ def createJob(title="title", description="description", employer="employer", loc
         "salary": salary,
         "firstname": firstname,
         "lastname": lastname,
-        "postedby" : postedby
+        "postedby" : postedby,
+        "applications" : applications or [],
+        "savedby" : savedby or []
     }
     
 #Author Fatemah Elsewaky

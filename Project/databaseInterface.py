@@ -136,5 +136,5 @@ def displayJobs(jobs):
     for job in jobs:
         print(job['title'])
         for key in job:
-            if key not in ['title', 'description', 'employer', 'location', 'salary']:
+            if key in ['description', 'employer', 'location', 'salary']:
                 print(f'  {key}: {job[key]}')
