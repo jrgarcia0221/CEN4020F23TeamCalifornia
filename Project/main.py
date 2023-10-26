@@ -238,6 +238,62 @@ def deleteJobAction():
 
     return False
 
+#Author Grant
+def displayJob(job):    
+    print(job['title'])
+
+    for key in job:
+        if key in ['title', 'description', 'employer', 'location', 'salary']:
+            print(f'  {key}: {job[key]}')
+
+
+#Author Grant
+def displaySavedJobsAction():
+    print("--------------------------------")
+    currentUsername = currentUser['username']
+    jobs = jobs_db.read()
+
+    for job in jobs:
+        users = job["savedby"]
+        
+        if currentUsername in users:
+            displayJob(job)
+
+    return False
+
+#Author Grant
+def displayAppliedJobsAction():
+    print("--------------------------------")
+    currentUsername = currentUser['username']
+    jobs = jobs_db.read()
+
+    for job in jobs:        
+        applications = job["applications"]
+        if any(obj.get("applicantUsername") == currentUsername for obj in applications):
+            displayJob(job)
+
+    return False
+
+#Author Grant
+def displayUnAppliedJobsAction():
+    print("--------------------------------")
+    currentUsername = currentUser['username']
+    jobs = jobs_db.read()
+
+    for job in jobs:
+        applications = job["applications"]
+        if any(obj.get("applicantUsername") == currentUsername for obj in applications):
+            continue
+
+        if job["postedby"] == currentUsername:
+            continue
+
+        displayJob(job)
+
+    return False
+
+
+
 #Author Grant DeBiase
 def handleDeleteJob(job, index):    
     jobs_db.delete(index)
@@ -995,7 +1051,19 @@ def buildMenu():
                                               menuSystem.menuNode(
                                               "Select a job",
                                               goBack=True,
-                                              action=selectJobAction)
+                                              action=selectJobAction),
+                                              menuSystem.menuNode(
+                                              "Display Saved Jobs",
+                                              goBack=True,
+                                              action=displaySavedJobsAction),
+                                              menuSystem.menuNode(
+                                              "Display Jobs Applied for",
+                                              goBack=True,
+                                              action=displayAppliedJobsAction),
+                                              menuSystem.menuNode(
+                                              "Display Jobs Not Applied For",
+                                              goBack=True,
+                                              action=displayUnAppliedJobsAction)
                                       ]),
                   menuSystem.menuNode(
                       "Learn a skill",

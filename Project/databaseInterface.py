@@ -125,8 +125,10 @@ def readJobPosts():
     print("---------------------------------------------")
     if data:
         for job in data:
+            print(job['title'])
             for key, value in job.items():
-                print(f"{key}: {value}")
+                if key in ['description', 'employer', 'location', 'salary']:
+                    print(f"   {key}: {value}")
             print()
     return data
 
