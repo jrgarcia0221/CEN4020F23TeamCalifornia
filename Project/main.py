@@ -295,20 +295,24 @@ def displayUnAppliedJobsAction():
 
 
 #Author Grant DeBiase
+#Deletes Job at index
 def handleDeleteJob(job, index):    
     jobs_db.delete(index)
 
 #Author Grant DeBiase
+#Adds current user to job's savedby array
 def handleSaveJob(job, index):
     job["savedby"].append(currentUser["username"])
     jobs_db.update(index, job)
 
 #Author Grant DeBiase
+#Removes current user from job's savedby array
 def handleUnSaveJob(job, index):
     job["savedby"].remove(currentUser["username"])
     jobs_db.update(index, job)
 
 #Author Grant DeBiase
+#Adds application to job's applications array
 def handleApplyJob(job, index):
     gradDate = input("Enter Graduation Date: ")
     workDate = input("Enter Date You Can Start Working: ")
@@ -360,7 +364,7 @@ def selectJobAction():
                     print("Enter apply to apply to job")
                     applyFlag = True
 
-            if (delFlag or saveFlag or applyFlag or unsaveFlag):
+            if (delFlag or saveFlag or applyFlag or unSaveFlag):
                 ans = input("Enter value or back to go back: ")
 
                 if (ans == "del"):
