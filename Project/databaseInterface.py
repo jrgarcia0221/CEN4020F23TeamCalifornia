@@ -136,7 +136,14 @@ def readJobPosts():
 def displayJobs(jobs):
     print("Available Jobs:")
     for job in jobs:
+        applied = currentUser['username'] in [app['applicantUsername'] for app in job.get("applications", [])]
         print(job['title'])
         for key in job:
             if key in ['description', 'employer', 'location', 'salary']:
                 print(f'  {key}: {job[key]}')
+        if applied:
+            print("---> Applied by You")
+    
+    user_notifications = currentUser.get("notifications", [])
+    for notification in user_notifications:
+        print(notification)

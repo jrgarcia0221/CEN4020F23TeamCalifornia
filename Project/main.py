@@ -246,7 +246,6 @@ def displayJob(job):
         if key in ['title', 'description', 'employer', 'location', 'salary']:
             print(f'  {key}: {job[key]}')
 
-
 #Author Grant
 def displaySavedJobsAction():
     print("--------------------------------")
@@ -296,8 +295,25 @@ def displayUnAppliedJobsAction():
 
 #Author Grant DeBiase
 #Deletes Job at index
-def handleDeleteJob(job, index):    
+def handleDeleteJob(job, index): 
+    job_title = job["title"]
+    
+    # Iterate through applicants and notify each user
+    applicants = job.get("applications", [])
+    for applicant in applicants:
+        applicant_username = applicant["applicantUsername"]
+        
+        # Add a notification to the user
+        conditions = [jsonDB.createQueryCondition("username", applicant_username)]
+        user_record = users_db.query(conditions)
+        user= user_record[0]
+        notification = f"Job '{job_title}' has been deleted."
+        user["notifications"].append(notification)
+        users_db.update(users_db.read().index(user), user)
+
     jobs_db.delete(index)
+    global postedJobs 
+    postedJobs = databaseInterface.readJobPosts()
 
 #Author Grant DeBiase
 #Adds current user to job's savedby array
