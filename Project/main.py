@@ -338,6 +338,8 @@ def handleApplyJob(job, index):
 
     job["applications"].append(application)
     jobs_db.update(index, job)
+    global postedJobs 
+    postedJobs = databaseInterface.readJobPosts()
 
 #Author Grant DeBiase
 #Lets user select a job
