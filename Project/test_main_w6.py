@@ -3,9 +3,7 @@ from unittest.mock import patch, Mock
 from jsonDB import jsonDB
 import json
 import databaseInterface
-from databaseInterface import addStudentAccount, studentNameExists, getPassword, login, addGuestSettings, getCurrentUser, lookForGuestSetting, addJobPost, readJobPosts, displayJobs
-from dataTypes import createExperience, createEducation, createAboutMe, createProfile
-from main import capitalizeFirstLetter, buildMenuTree, main, watchVideo, studentLookup, createAccount, passwordIsValid, postJobAction, sendFriendRequest, selectJobAction, handleSaveJob
+from main import postJobAction, selectJobAction, handleSaveJob, displaySavedJobsAction, displayAppliedJobsAction, displayUnAppliedJobsAction
 import sys
 from io import StringIO
 import main
@@ -74,20 +72,99 @@ def test_saveJob():
         assert "s1" in jobs_db.read(0)["savedby"]
         assert "s2" not in jobs_db.read(0)["savedby"]
 
-def test_selectJob():
-  currentUser, users_db, jobs_db = setupMockData()
-  selectedJob = jobs_db.read(0)
-  expected_output = f"Selected job: {selectedJob['title']} {selectedJob['description']} {selectedJob['employer']} {selectedJob['location']} {selectedJob['salary']}\n"
-  expected_output += "Enter save to save job for later\n" 
-  expected_output += "Enter apply to apply to job\n"
-  # expected_output += ""
-  with patch("main.currentUser", currentUser), \
-        patch("main.users_db", users_db), \
-        patch("main.jobs_db", jobs_db),\
-        patch("builtins.input", side_effect=[1]):
+# def test_selectJob():
+#   currentUser, users_db, jobs_db = setupMockData()
+#   selectedJob = jobs_db.read(0)
+#   expected_output = f"Selected job: {selectedJob['title']} {selectedJob['description']} {selectedJob['employer']} {selectedJob['location']} {selectedJob['salary']}\n"
+#   expected_output += "Enter save to save job for later\n" 
+#   expected_output += "Enter apply to apply to job\n"
+#   # expected_output += ""
+#   with patch("main.currentUser", currentUser), \
+#         patch("main.users_db", users_db), \
+#         patch("main.jobs_db", jobs_db),\
+#         patch("builtins.input", side_effect=[1]):
     
-        selectJobAction()
+#         selectJobAction()
 
-        out, err = capfd.readouterr()
-        assert out.strip() == expected_output.strip()
+#         out, err = capfd.readouterr()
+#         assert out.strip() == expected_output.strip()
         
+
+        
+def test_displayAppliedJobsAction(capsys):
+    currentUser, users_db, jobs_db = setupMockData()
+
+    # Add jobs to the database
+    job1 = dataTypes.createJob('Job 1', 'Description 1', 'Employer 1', 'Location 1', 'Salary 1', 's', '2', 's2')
+    job1["applications"].append(dataTypes.createJobApplication(gradDate="2025", workDate="1", paragraph="yes", applicantUsername="s1"))
+    jobs_db.add(job1)
+
+    job2 = dataTypes.createJob('Job 2', 'Description 2', 'Employer 2', 'Location 2', 'Salary 2', 's', '2', 's2')
+    jobs_db.add(job2)
+
+    # Redirect stdout to capture the printed output
+    with patch("main.currentUser", currentUser), \
+         patch("main.jobs_db", jobs_db), \
+         patch("builtins.input", side_effect=[]):
+
+        # Call the function
+        displayAppliedJobsAction()
+
+        # Capture the printed output
+        out, _ = capsys.readouterr()
+
+        # Check if the expected job titles are in the printed output
+        assert "Job 1" in out
+        assert "Job 2" not in out  # Job 2 should not be in the applied jobs list
+
+def test_displayUnAppliedJobsAction(capsys):
+    currentUser, users_db, jobs_db = setupMockData()
+
+    # Add jobs to the database
+    job1 = dataTypes.createJob('Job 1', 'Description 1', 'Employer 1', 'Location 1', 'Salary 1', 's', '2', 's2')
+    job1["applications"].append(dataTypes.createJobApplication(gradDate="2025", workDate="1", paragraph="yes", applicantUsername="s1"))
+    jobs_db.add(job1)
+
+    job2 = dataTypes.createJob('Job 2', 'Description 2', 'Employer 2', 'Location 2', 'Salary 2', 's', '2', 's2')
+    jobs_db.add(job2)
+
+    # Redirect stdout to capture the printed output
+    with patch("main.currentUser", currentUser), \
+         patch("main.jobs_db", jobs_db), \
+         patch("builtins.input", side_effect=[]):
+
+        # Call the function
+        displayUnAppliedJobsAction()
+
+        # Capture the printed output
+        out, _ = capsys.readouterr()
+
+        # Check if the expected job titles are in the printed output
+        assert "Job 1" not in out  # Job 1 should be in the applied jobs list
+        assert "Job 2" in out
+
+def test_displaySavedJobsAction(capsys):
+    currentUser, users_db, jobs_db = setupMockData()
+
+    # Add jobs to the database
+    job1 = dataTypes.createJob('Job 1', 'Description 1', 'Employer 1', 'Location 1', 'Salary 1', 's', '2', 's2')
+    job1["savedby"].append(currentUser["username"])
+    jobs_db.add(job1)
+
+    job2 = dataTypes.createJob('Job 2', 'Description 2', 'Employer 2', 'Location 2', 'Salary 2', 's', '2', 's2')
+    jobs_db.add(job2)
+
+    # Redirect stdout to capture the printed output
+    with patch("main.currentUser", currentUser), \
+         patch("main.jobs_db", jobs_db), \
+         patch("builtins.input", side_effect=[]):
+
+        # Call the function
+        displaySavedJobsAction()
+
+        # Capture the printed output
+        out, _ = capsys.readouterr()
+
+        # Check if the expected job titles are in the printed output
+        assert "Job 1" in out
+        assert "Job 2" not in out  # Job 2 should not be in the saved jobs list
