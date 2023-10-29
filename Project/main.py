@@ -143,40 +143,6 @@ def login():
   friendRequest() 
 
   return True
-
-# def login():
-#     global currentUser, username, guestSettingArr
-
-#     print("--------------------------------")
-
-#     if databaseInterface.isEmpty("user"):
-#         print("There are no existing accounts to log into.")
-#         return False
-
-#     while True:
-#         username = input("Enter your username: ")
-#         if databaseInterface.studentExists(username):
-#             break
-#         else:
-#             print("Invalid Username. Please try again.")
-
-#     while True:
-#         password = input("Enter your password: ")
-#         if databaseInterface.login(username, password):
-#             # Save logged in user
-#             currentUser = databaseInterface.getCurrentUser(username)
-#             if currentUser:
-#                 guestSettingArr = databaseInterface.lookForGuestSetting()
-#                 usefulLinks.initializeGuestArray(guestSettingArr, currentUser)
-#                 print("Login successful!")
-#                 friendRequest()
-#                 return True
-#             else:
-#                 print("Error: Unable to retrieve user data.")
-#                 return False
-#         else:
-#             print("Invalid Password. Please try again.")
-
   
 def learnSkill():
   print("--------------------------------")
