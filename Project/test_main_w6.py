@@ -3,7 +3,7 @@ from unittest.mock import patch, Mock
 from jsonDB import jsonDB
 import json
 import databaseInterface
-from main import postJobAction, selectJobAction,handleApplyJob, handleSaveJob, displaySavedJobsAction, displayAppliedJobsAction, displayUnAppliedJobsAction, jobSearchAction
+from main import postJobAction, selectJobAction,handleApplyJob, handleSaveJob, displaySavedJobsAction, displayAppliedJobsAction, displayUnAppliedJobsAction, jobSearchAction,handleDeleteJob
 import sys
 from io import StringIO
 import main
@@ -31,13 +31,12 @@ def test_unsuccessful_11th_jobposting():
         }
         databaseInterface.addJobPost('t'+str(i+1), 'desc'+str(i+1), 'e'+str(i+1), 'location', str(i+1))
     result = databaseInterface.isFull('job')
-
     
     assert result == True
 
 def setupMockData():
-    mockUsers = jsonDB("mockData.json")
-    mockJobs = jsonDB("mockJobs.json")
+    mockUsers = jsonDB("mockData1.json")
+    mockJobs = jsonDB("mockJobs1.json")
     mockUsers.clear()
     mockJobs.clear()
 
@@ -68,6 +67,18 @@ def test_saveJob():
 
         assert "s1" in jobs_db.read(0)["savedby"]
         assert "s2" not in jobs_db.read(0)["savedby"]
+
+def test_deleteJob():
+  currentUser, users_db, jobs_db = setupMockData()
+  with patch("main.currentUser", currentUser), \
+        patch("main.users_db", users_db), \
+        patch("main.jobs_db", jobs_db),\
+        patch("builtins.input", side_effect=[]):
+    
+        handleDeleteJob(jobs_db.read(0), 0)
+
+        assert databaseInterface.isEmpty(jobs_db) == True
+        
 
 def test_selectJob(capfd):
         currentUser, users_db, jobs_db = setupMockData()
@@ -102,47 +113,47 @@ def test_applyJob():
         
 
 def setupMockData2():
-    mockUsers = jsonDB("mockData.json")
-    mockJobs = jsonDB("mockJobs.json")
-    mockUsers.clear()
-    mockJobs.clear()
+    mockUsers1 = jsonDB("mockData1.json")
+    mockJobs1 = jsonDB("mockJobs1.json")
+    mockUsers1.clear()
+    mockJobs1.clear()
 
     s1 = dataTypes.createStudent("s1", "Password123!", "s", "1", "cs", "usf", friendrequest=[])
     s2 = dataTypes.createStudent("s2", "Password123!", "s", "2", "cs", "usf", friendrequest=[])
     s3 = dataTypes.createStudent("s3", "Password123!", "s", "3", "cs", "usf", friendrequest=[])
-    mockUsers.add(s1)
-    mockUsers.add(s2)
-    mockUsers.add(s3)
+    mockUsers1.add(s1)
+    mockUsers1.add(s2)
+    mockUsers1.add(s3)
 
     job = dataTypes.createJob('research intern', 'good internship', 'alex garcia', 'orlando', '20.00 hr', 's', '1','s1')
 
-    mockJobs.add(job)
+    mockJobs1.add(job)
     
     currentUser = s1
-    users_db = mockUsers
-    jobs_db = mockJobs
+    users_db = mockUsers1
+    jobs_db = mockJobs1
 
     return currentUser, users_db, jobs_db
 
-# def test_deleteJobByUser(capfd):
-#         currentUser, users_db, jobs_db = setupMockData2()
-#         selectedJob = jobs_db.read(0)
-#         expected_output = f"Enter 1 to select job - {selectedJob['title']}\n"
-#         expected_output += f"Selected job: {selectedJob['title']} {selectedJob['description']} {selectedJob['employer']} {selectedJob['location']} {selectedJob['salary']}\n"
-#         expected_output += "Enter del to delete job\n" 
-#         expected_output += "---------------------------------------------"
+def test_deleteJobByUser(capfd):
+        currentUser, users_db, jobs_db = setupMockData2()
+        selectedJob = jobs_db.read(0)
+        expected_output = f"Enter 1 to select job - {selectedJob['title']}\n"
+        expected_output += f"Selected job: {selectedJob['title']} {selectedJob['description']} {selectedJob['employer']} {selectedJob['location']} {selectedJob['salary']}\n"
+        expected_output += "Enter del to delete job\n" 
+        # expected_output += "---------------------------------------------"
 
         
-#   # expected_output += ""
-#         with patch("main.currentUser", currentUser), \
-#         patch("main.users_db", users_db), \
-#         patch("main.jobs_db", jobs_db),\
-#         patch("builtins.input", side_effect=['1','del']):
+  # expected_output += ""
+        with patch("main.currentUser", currentUser), \
+        patch("main.users_db", users_db), \
+        patch("main.jobs_db", jobs_db),\
+        patch("builtins.input", side_effect=['1','back']):
     
-#           selectJobAction()
+          selectJobAction()
 
-#         out, err = capfd.readouterr()
-#         assert out.strip() == expected_output.strip()
+        out, err = capfd.readouterr()
+        assert out.strip() == expected_output.strip()
 
 def test_deleteJobAttemptByNonUser(capfd):
         currentUser, users_db, jobs_db = setupMockData()
