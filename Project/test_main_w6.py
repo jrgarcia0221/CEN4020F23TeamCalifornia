@@ -3,12 +3,11 @@ from unittest.mock import patch, Mock
 from jsonDB import jsonDB
 import json
 import databaseInterface
-from main import postJobAction, selectJobAction, handleSaveJob, displaySavedJobsAction, displayAppliedJobsAction, displayUnAppliedJobsAction
+from main import postJobAction, selectJobAction,handleApplyJob, handleSaveJob, displaySavedJobsAction, displayAppliedJobsAction, displayUnAppliedJobsAction, jobSearchAction
 import sys
 from io import StringIO
 import main
 import dataTypes
-
 
 def test_post_job_full(capsys):
 
@@ -35,8 +34,6 @@ def test_unsuccessful_11th_jobposting():
 
     
     assert result == True
-
-
 
 def setupMockData():
     mockUsers = jsonDB("mockData.json")
@@ -72,23 +69,122 @@ def test_saveJob():
         assert "s1" in jobs_db.read(0)["savedby"]
         assert "s2" not in jobs_db.read(0)["savedby"]
 
-# def test_selectJob():
-#   currentUser, users_db, jobs_db = setupMockData()
-#   selectedJob = jobs_db.read(0)
-#   expected_output = f"Selected job: {selectedJob['title']} {selectedJob['description']} {selectedJob['employer']} {selectedJob['location']} {selectedJob['salary']}\n"
-#   expected_output += "Enter save to save job for later\n" 
-#   expected_output += "Enter apply to apply to job\n"
+def test_selectJob(capfd):
+        currentUser, users_db, jobs_db = setupMockData()
+        selectedJob = jobs_db.read(0)
+        expected_output = f"Enter 1 to select job - {selectedJob['title']}\n"
+        expected_output += f"Selected job: {selectedJob['title']} {selectedJob['description']} {selectedJob['employer']} {selectedJob['location']} {selectedJob['salary']}\n"
+        expected_output += "Enter save to save job for later\n" 
+        expected_output += "Enter apply to apply to job"
+        
+  # expected_output += ""
+        with patch("main.currentUser", currentUser), \
+        patch("main.users_db", users_db), \
+        patch("main.jobs_db", jobs_db),\
+        patch("builtins.input", side_effect=['1', 'back']):
+    
+          selectJobAction()
+
+        out, err = capfd.readouterr()
+        assert out.strip() == expected_output.strip()
+
+def test_applyJob():
+  currentUser, users_db, jobs_db = setupMockData()
+  with patch("main.currentUser", currentUser), \
+        patch("main.users_db", users_db), \
+        patch("main.jobs_db", jobs_db),\
+        patch("builtins.input", side_effect=['05-23-2024','06-20-2024', 'have fun']):
+    
+        handleApplyJob(jobs_db.read(0), 0)
+
+        assert "s1" in jobs_db.read(0)["applications"][0]["applicantUsername"]
+        # assert "s2" not in jobs_db.read(0)["applications"]
+        
+
+def setupMockData2():
+    mockUsers = jsonDB("mockData.json")
+    mockJobs = jsonDB("mockJobs.json")
+    mockUsers.clear()
+    mockJobs.clear()
+
+    s1 = dataTypes.createStudent("s1", "Password123!", "s", "1", "cs", "usf", friendrequest=[])
+    s2 = dataTypes.createStudent("s2", "Password123!", "s", "2", "cs", "usf", friendrequest=[])
+    s3 = dataTypes.createStudent("s3", "Password123!", "s", "3", "cs", "usf", friendrequest=[])
+    mockUsers.add(s1)
+    mockUsers.add(s2)
+    mockUsers.add(s3)
+
+    job = dataTypes.createJob('research intern', 'good internship', 'alex garcia', 'orlando', '20.00 hr', 's', '1','s1')
+
+    mockJobs.add(job)
+    
+    currentUser = s1
+    users_db = mockUsers
+    jobs_db = mockJobs
+
+    return currentUser, users_db, jobs_db
+
+# def test_deleteJobByUser(capfd):
+#         currentUser, users_db, jobs_db = setupMockData2()
+#         selectedJob = jobs_db.read(0)
+#         expected_output = f"Enter 1 to select job - {selectedJob['title']}\n"
+#         expected_output += f"Selected job: {selectedJob['title']} {selectedJob['description']} {selectedJob['employer']} {selectedJob['location']} {selectedJob['salary']}\n"
+#         expected_output += "Enter del to delete job\n" 
+#         expected_output += "---------------------------------------------"
+
+        
 #   # expected_output += ""
-#   with patch("main.currentUser", currentUser), \
+#         with patch("main.currentUser", currentUser), \
 #         patch("main.users_db", users_db), \
 #         patch("main.jobs_db", jobs_db),\
-#         patch("builtins.input", side_effect=[1]):
+#         patch("builtins.input", side_effect=['1','del']):
     
-#         selectJobAction()
+#           selectJobAction()
 
 #         out, err = capfd.readouterr()
 #         assert out.strip() == expected_output.strip()
+
+def test_deleteJobAttemptByNonUser(capfd):
+        currentUser, users_db, jobs_db = setupMockData()
+        selectedJob = jobs_db.read(0)
+        expected_output = f"Enter 1 to select job - {selectedJob['title']}\n"
+        expected_output += f"Selected job: {selectedJob['title']} {selectedJob['description']} {selectedJob['employer']} {selectedJob['location']} {selectedJob['salary']}\n"
+        expected_output += "Enter del to delete job\n" 
+        expected_output += "---------------------------------------------"
+
         
+  # expected_output += ""
+        with patch("main.currentUser", currentUser), \
+        patch("main.users_db", users_db), \
+        patch("main.jobs_db", jobs_db),\
+        patch("builtins.input", side_effect=['1','del']):
+    
+          selectJobAction()
+
+        out, err = capfd.readouterr()
+        assert out.strip() != expected_output.strip()
+
+def test_applySecondTry(capfd):
+  currentUser, users_db, jobs_db = setupMockData()
+  selectedJob = jobs_db.read(0)
+  expected_output = f"Enter 1 to select job - {selectedJob['title']}\n"
+  expected_output += f"Selected job: {selectedJob['title']} {selectedJob['description']} {selectedJob['employer']} {selectedJob['location']} {selectedJob['salary']}\n"
+  expected_output += "Enter save to save job for later\n" 
+  expected_output += "Enter apply to apply to job"
+  expected_output = f"Enter 1 to select job - {selectedJob['title']}\n"
+  expected_output += f"Selected job: {selectedJob['title']} {selectedJob['description']} {selectedJob['employer']} {selectedJob['location']} {selectedJob['salary']}\n"
+  expected_output += "Enter save to save job for later\n" 
+  # expected_output += "Enter apply to apply to job"
+
+  with patch("main.currentUser", currentUser), \
+  patch("main.users_db", users_db), \
+  patch("main.jobs_db", jobs_db),\
+  patch("builtins.input", side_effect=['1','apply','05-23-2024','06-20-2024', 'have fun', '2','1','back']):
+
+      selectJobAction()
+
+  out, err = capfd.readouterr()
+  assert out.strip() != expected_output.strip()
 
         
 def test_displayAppliedJobsAction(capsys):
