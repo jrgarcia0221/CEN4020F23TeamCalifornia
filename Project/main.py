@@ -11,6 +11,147 @@ users_db = jsonDB("users.json")
 jobs_db = jsonDB("jobs.json")
 
 #Author Grant DeBiase
+#Sends message from one student to another
+def sendMessage(fromStudent, toStudent, messageStr):
+    toStudentObjs = users_db.query([jsonDB.createQueryCondition("username", toStudent)])
+    fromStudentObjs = users_db.query([jsonDB.createQueryCondition("username", fromStudent)])
+
+    #fromStudent or toStudent is invalid
+    if len(toStudentObjs) < 1 or len(fromStudentObjs) < 1:
+        print("Student not found in database")
+
+    toObj = toStudentObjs[0]
+    index = users_db.read().index(toObj)    
+
+    message = dataTypes.createMessage(fromStudent, messageStr)
+    toObj["messages"].append(message)
+    users_db.update( index, toObj)
+
+#Author Grant DeBiase
+#For viewing messages and replying
+def viewMessagesInterface():
+    currentUsername = currentUser["username"]
+    currentUserIndex = users_db.read().index(currentUser)
+    messages = currentUser["messages"]
+    currentUserIsPlus = currentUser["tier"] == "plus"    
+    
+    messageInfos = []
+
+    i = 0
+    for message in messages:
+        i = i + 1
+
+        fromStudentName = ""        
+        fromStudentObj = None    
+
+        fromStudent = message["fromStudent"]
+        text = message["message"]
+
+        fromStudentObjs = users_db.query([jsonDB.createQueryCondition("username", fromStudent)])
+        if len(fromStudentObjs) < 1:
+            fromStudentName = "Student is no longer in InCollege"
+        else:
+            fromStudentObj = fromStudentObjs[0]
+            fromStudentName = f"{fromStudentObj['firstname']} {fromStudentObj['lastname']}"          
+
+        messageInfos.append({"fromStudentObj" : fromStudentObj, "fromStudentName": fromStudentName})
+        
+        print(f"{fromStudentName}")
+        print(f"    {text}")
+        print(f"    Enter: {i} to select")        
+    
+    if i > 0:
+        ans = input("\nEnter selection: ")
+
+        if (int(ans)>=1 and int(ans)<=i):
+            message = messages[i - 1]
+            messageInfo = messageInfos[i - 1]
+            canReply = currentUserIsPlus or (messageInfo["fromStudentObj"] != None and currentUsername in messageInfo["fromStudentObj"]["friends"])
+            
+            if canReply: print("Enter reply to reply to message")
+            print("Enter del to delete message")            
+            val = input("Enter Value: ")
+            
+            if val=="del":
+                messages.pop(i - 1)
+
+            message["read"] = True
+            currentUser["messages"] = messages
+            users_db.update(currentUserIndex, currentUser)
+            
+            if val=="reply" and canReply:
+                name = messageInfo["fromStudentName"]
+                toUsername = messageInfo["fromStudentObj"]["username"]
+                m = input(f"Enter Message to {name}: ")
+                sendMessage(currentUsername, toUsername, m)
+        
+    else:
+        print("No Messages")
+        
+
+
+#Author Grant DeBiase
+#Shows Messaging UI
+def messageInterfaceAction():
+    print("\nOptions:")
+    print("0. Go Back")
+    print("1. View Messages")
+    print("2. Message a Friend")
+    isPlus = currentUser["tier"] == "plus"
+    lastNum = "2"
+    friendsOnly=False
+
+    if isPlus:
+        print("3. Message any Student")    
+        lastNum = "3"
+    
+    while True:
+        choice = input(f"Enter your choice (0-{lastNum}): ")
+
+        if choice == "0":        
+            return False
+        elif choice == "1":
+            viewMessagesInterface()
+            return False
+        elif choice == "2":
+            friendsOnly=True
+            break
+        elif choice == "3" and isPlus:
+            friendsOnly=False
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+    
+    currentUsername = currentUser['username']
+    currentUserindex = users_db.read().index(currentUser)
+    usersToMessage = users_db.read()
+    usersToMessage.pop(currentUserindex)
+
+    if friendsOnly:
+        for student in usersToMessage:
+            if currentUsername not in student["friends"]:
+                usersToMessage.remove(student)
+
+    i = 0
+    for student in usersToMessage:
+        i = i + 1
+        print(f"Enter {i} to message {student['firstname']} {student['lastname']}")        
+
+    if i > 0:
+        ans = input("Enter number: ")
+
+        if (int(ans)>=1 and int(ans)<=i):
+            userToMessage = usersToMessage[int(ans)-1]
+            m = input("Enter Message: ")
+            sendMessage(currentUsername, userToMessage["username"], m)
+    else:
+        print("No students availale to be messaged")
+    return False
+
+    
+
+#Author Grant DeBiase
 #Returns true if password is valid
 def passwordIsValid(password):
   #Password must be between 8 and 12 characters
@@ -87,8 +228,16 @@ def createAccount():
   last = input("Enter your last name: ")
   major = input("Enter your major: ")
   uni = input("Enter your university: ")
+
+  while True:
+    tier = input("Enter membership (standard/plus): ")
+    if tier == "standard" or tier == "plus":
+        break
+    print("Invalid choice, try again")
+
+
   databaseInterface.addGuestSettings(username)
-  databaseInterface.addStudentAccount(username, password, first, last, major, uni)
+  databaseInterface.addStudentAccount(username, password, first, last, major, uni, tier)
   global users_db 
   users_db = jsonDB("users.json")
 
@@ -996,6 +1145,10 @@ def buildMenu():
               goBack=True,
               action=login,
               children=[
+                  menuSystem.menuNode("Messages",
+                                      goBack=False,
+                                      action=messageInterfaceAction,
+                                      ),
                   menuSystem.menuNode("Find Someone you know",
                                       goBack=True,
                                       action=studentLookupLog,

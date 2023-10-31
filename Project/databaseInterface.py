@@ -45,12 +45,12 @@ def isFull(db):
     return len(data) >= 10
 
 #Adds Student Account
-def addStudentAccount(username, password, firstname, lastname, major, university):
+def addStudentAccount(username, password, firstname, lastname, major, university, tier):
     db = jsonDB(usersDB)
     data = db.read()
     if not studentExists(username) and not isFull("user"):
         settings = createSetting()  # Create student settings
-        new_student = createStudent(username, password, firstname, lastname, major, university, settings)
+        new_student = createStudent(username, password, firstname, lastname, major, university, settings, tier=tier)
         db.add(new_student)
         return True
     return False
