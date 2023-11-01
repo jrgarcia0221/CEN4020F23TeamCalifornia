@@ -37,6 +37,9 @@ def viewMessagesInterface():
     
     messageInfos = []
 
+    print("\nInbox")
+    print("-----------------------------------------")
+
     i = 0
     for message in messages:
         i = i + 1
@@ -95,7 +98,7 @@ def viewMessagesInterface():
 def messageInterfaceAction():
     print("\nOptions:")
     print("0. Go Back")
-    print("1. View Messages")
+    print("1. Inbox")
     print("2. Message a Friend")
     isPlus = currentUser["tier"] == "plus"
     lastNum = "2"
@@ -149,7 +152,26 @@ def messageInterfaceAction():
         print("No students availale to be messaged")
     return False
 
+# Author Ashley Clark
+# displays notifications for messages the user has received
+def messageNotifs():
+    print("-----------------------------------------")
+    while currentUser["messages"]:
+        numMess = len(currentUser["messages"])
+        if numMess > 1:
+            print(f"You have {numMess} messages waiting.")
+        else: print(f"You have {numMess} message waiting.")
+        count = input("Select (1) to view or (0) to continue: ")
+
+        if count == "1":
+            viewMessagesInterface()
+        elif count == "0":
+            return True
+        else:
+            print("Invalid choice. No messages viewed.")
     
+    print("You have no messages.")
+    return True
 
 #Author Grant DeBiase
 #Returns true if password is valid
@@ -290,6 +312,7 @@ def login():
 
   print("Login successful!")  
   friendRequest() 
+  messageNotifs()
 
   return True
   
