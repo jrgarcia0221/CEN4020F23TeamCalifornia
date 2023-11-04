@@ -74,8 +74,8 @@ def viewMessagesInterface():
             messageInfo = messageInfos[i - 1]
             canReply = currentUserIsPlus or (messageInfo["fromStudentObj"] != None and currentUsername in messageInfo["fromStudentObj"]["friends"])
             
-            if canReply: print("Enter reply to reply to message")
-            print("Enter del to delete message")            
+            if canReply: print("Enter reply to reply to message or press enter to continue")
+            print("Enter del to delete message or press enter to continue")            
             val = input("Enter Value: ")
             
             if val=="del":
@@ -157,7 +157,7 @@ def messageInterfaceAction():
             m = input("Enter Message: ")
             sendMessage(currentUsername, userToMessage["username"], m)
     else:
-        print("No students availale to be messaged")
+        print("No students available to be messaged")
     return False
 
 # Author Ashley Clark
