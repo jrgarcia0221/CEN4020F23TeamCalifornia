@@ -64,7 +64,10 @@ def viewMessagesInterface():
         print(f"    Enter: {i} to select")        
     
     if i > 0:
-        ans = input("\nEnter selection: ")
+        while True:
+            ans = input("Enter number: ")
+            if ans.isdigit() and (int(ans)>=1 and int(ans)<=i): break
+            print(f"Enter a digit: between {1} and {i}")
 
         if (int(ans)>=1 and int(ans)<=i):
             message = messages[i - 1]
@@ -130,11 +133,13 @@ def messageInterfaceAction():
     currentUserindex = users_db.read().index(currentUser)
     usersToMessage = users_db.read()
     usersToMessage.pop(currentUserindex)
+    usersToMessagecopy = usersToMessage.copy()
 
     if friendsOnly:
         for student in usersToMessage:
             if currentUsername not in student["friends"]:
-                usersToMessage.remove(student)
+                usersToMessagecopy.remove(student)
+    usersToMessage = usersToMessagecopy
 
     i = 0
     for student in usersToMessage:
@@ -142,7 +147,10 @@ def messageInterfaceAction():
         print(f"Enter {i} to message {student['firstname']} {student['lastname']}")        
 
     if i > 0:
-        ans = input("Enter number: ")
+        while True:
+            ans = input("Enter number: ")
+            if ans.isdigit() and (int(ans)>=1 and int(ans)<=i): break
+            print(f"Enter a digit: between {1} and {i}")
 
         if (int(ans)>=1 and int(ans)<=i):
             userToMessage = usersToMessage[int(ans)-1]
