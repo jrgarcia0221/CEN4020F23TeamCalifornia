@@ -61,8 +61,8 @@ def viewMessagesInterface():
         
         print(f"{fromStudentName}")
         print(f"    {text}")
-        print(f"    Enter: {i} to select")        
-    
+        print(f"    Enter: {i} to select")
+
     if i > 0:
         while True:
             ans = input("Enter number: ")
@@ -70,8 +70,8 @@ def viewMessagesInterface():
             print(f"Enter a digit: between {1} and {i}")
 
         if (int(ans)>=1 and int(ans)<=i):
-            message = messages[i - 1]
-            messageInfo = messageInfos[i - 1]
+            message = messages[int(ans) - 1]
+            messageInfo = messageInfos[int(ans) - 1]
             canReply = currentUserIsPlus or (messageInfo["fromStudentObj"] != None and currentUsername in messageInfo["fromStudentObj"]["friends"])
             
             if canReply: print("Enter reply to reply to message or press enter to continue")
@@ -79,7 +79,7 @@ def viewMessagesInterface():
             val = input("Enter Value: ")
             
             if val=="del":
-                messages.pop(i - 1)
+                messages.pop(int(ans) - 1)
 
             message["read"] = True
             currentUser["messages"] = messages
