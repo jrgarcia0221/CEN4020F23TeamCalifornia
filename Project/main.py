@@ -165,8 +165,12 @@ def messageInterfaceAction():
 def messageNotifs():
     print("-----------------------------------------")
     while currentUser["messages"]:
-        numMess = len(currentUser["messages"])
-        if numMess > 1:
+        # numMess = len(currentUser["messages"])
+        numMess = 0
+        for message in currentUser["messages"]:
+            if message["read"] == False:
+                numMess += 1
+        if numMess > 1 or numMess == 0:
             print(f"You have {numMess} messages waiting.")
         else: print(f"You have {numMess} message waiting.")
         count = input("Select (1) to view or (0) to continue: ")
