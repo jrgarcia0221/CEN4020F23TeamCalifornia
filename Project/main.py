@@ -26,7 +26,7 @@ def sendMessage(fromStudent, toStudent, messageStr):
     message = dataTypes.createMessage(fromStudent, messageStr)
     toObj["messages"].append(message)
     users_db.update( index, toObj)
-
+    print("Your message has been sent")
 #Author Grant DeBiase
 #For viewing messages and replying
 def viewMessagesInterface():
