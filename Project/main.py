@@ -3,6 +3,7 @@ import menuSystem
 import usefulLinks
 import re
 import sys
+from datetime import date
 from jsonDB import jsonDB
 import dataTypes
 
@@ -185,6 +186,78 @@ def messageNotifs():
 
     return True
 
+
+def profileNotification():
+    notifExists = False
+    while True:
+        # has no profile
+        if not currentUser.get("profile") or not any(currentUser["profile"].values()):
+            # check if notification already exists
+            for notification in currentUser["notifications"]:
+                if notification["type"] == "profile":
+                    notifExists = True
+            if notifExists == False:
+                notification = dataTypes.createNotification("profile", "Don't forget to create a profile.")
+                currentUser["notifications"].append(notification)
+                cuurentUserIndex = users_db.read().index(currentUser)
+                users_db.update(cuurentUserIndex, currentUser)
+            break
+    # display notification
+    for notification in currentUser["notifications"]:
+        if notification["type"] == "profile":
+            print()
+            print(notification["notification"])
+
+def appliedInPast7Days():
+    today = date.today()
+
+    currentUsername = currentUser['username']
+    jobs = jobs_db.read()
+
+    for job in jobs:
+        applications = job["applications"]
+        if any(obj.get("applicantUsername") == currentUsername for obj in applications):
+            for application in job["applications"]:
+                # time since last application
+                appDate = application["applicationDate"]
+                newDate = date(appDate[0], appDate[1], appDate[2])
+                diff = today - newDate
+                if diff.days > 7:
+                    applicationNotification()
+
+
+def applicationNotification():
+    notifExists = False
+
+    # check if notification already exists
+    for notification in currentUser["notifications"]:
+        if notification["type"] == "application":
+            notifExists = True
+    if notifExists == False:
+        notification = dataTypes.createNotification("application", "Remember - you're going to want to have a job when you graduate. Make sure that you start to apply for jobs today!")
+        currentUser["notifications"].append(notification)
+        cuurentUserIndex = users_db.read().index(currentUser)
+        users_db.update(cuurentUserIndex, currentUser)
+    
+    # display notification
+    for notification in currentUser["notifications"]:
+        if notification["type"] == "application":
+            print()
+            print(notification["notification"])
+
+
+def checkNotifications():
+    # check for notifcation worthiy things
+    profileNotification()
+    appliedInPast7Days()
+    # print notifications
+    # if len(currentUser["notifications"]) > 0:
+    #     print("-----------------------------------------")
+    #     print("Notifications:")
+    #     for notification in currentUser["notifications"]:
+    #         print(notification["notification"])
+    return True
+
 #Author Grant DeBiase
 #Returns true if password is valid
 def passwordIsValid(password):
@@ -325,6 +398,8 @@ def login():
   print("Login successful!")  
   friendRequest() 
   messageNotifs()
+  # check for profile & notify
+  checkNotifications()
 
   return True
   
@@ -484,7 +559,9 @@ def handleApplyJob(job, index):
     workDate = input("Enter Date You Can Start Working: ")
     paragraph = input("Enter paragraph on why you think you would be a good fit for this job: ")
 
-    application = dataTypes.createJobApplication(gradDate, workDate, paragraph, currentUser["username"])
+    appDate = date.today()
+    appDate_array = [appDate.year, appDate.month, appDate.day]
+    application = dataTypes.createJobApplication(gradDate, workDate, paragraph, currentUser["username"], appDate_array)
 
     job["applications"].append(application)
     jobs_db.update(index, job)

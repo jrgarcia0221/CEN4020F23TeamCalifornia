@@ -37,12 +37,13 @@ def createStudent(username="JohnDoe", password="Password123!", firstname="John",
         "messages" : messages or [] #use createMessage dataType
     }
 
-def createJobApplication(gradDate="", workDate="", paragraph="", applicantUsername=""):
+def createJobApplication(gradDate="", workDate="", paragraph="", applicantUsername="", applicationDate=[]):
     return {
         "gradDate" : gradDate,
         "workDate" : workDate,
         "paragraph" : paragraph,
-        "applicantUsername" : applicantUsername
+        "applicantUsername" : applicantUsername,
+        "applicationDate": applicationDate
     }
     
 #Author Grant DeBiase
@@ -99,4 +100,10 @@ def createProfile(title="",major = "", university = "", aboutMe= None):
         "major": major,
         "university": university,
         "aboutMe": aboutMe or createAboutMe()
+    }
+
+def createNotification(notifType=None, notification=None):
+    return {
+        "type": notifType,
+        "notification": notification
     }

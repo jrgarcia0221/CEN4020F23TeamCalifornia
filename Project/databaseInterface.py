@@ -132,6 +132,6 @@ def displayJobs(jobs):
         if applied:
             print("---> Applied by You")
     
-    user_notifications = currentUser.get("notifications", [])
-    for notification in user_notifications:
-        print(notification)
+    # user_notifications = currentUser.get("notifications", [])
+    # for notification in user_notifications:
+    #     print(notification)
