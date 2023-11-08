@@ -163,16 +163,17 @@ def messageInterfaceAction():
 # Author Ashley Clark
 # displays notifications for messages the user has received
 def messageNotifs():
-    print("-----------------------------------------")
     while currentUser["messages"]:
         # numMess = len(currentUser["messages"])
         numMess = 0
         for message in currentUser["messages"]:
             if message["read"] == False:
                 numMess += 1
-        if numMess > 1 or numMess == 0:
-            print(f"You have {numMess} messages waiting.")
-        else: print(f"You have {numMess} message waiting.")
+        if numMess > 0:
+            print("-----------------------------------------")
+            print(f"You have messages waiting for you.")
+        else:
+            break
         count = input("Select (1) to view or (0) to continue: ")
 
         if count == "1":
@@ -181,8 +182,7 @@ def messageNotifs():
             return True
         else:
             print("Invalid choice. No messages viewed.")
-    
-    print("You have no messages.")
+
     return True
 
 #Author Grant DeBiase
