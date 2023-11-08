@@ -247,15 +247,9 @@ def applicationNotification():
 
 
 def checkNotifications():
-    # check for notifcation worthiy things
     profileNotification()
     appliedInPast7Days()
-    # print notifications
-    # if len(currentUser["notifications"]) > 0:
-    #     print("-----------------------------------------")
-    #     print("Notifications:")
-    #     for notification in currentUser["notifications"]:
-    #         print(notification["notification"])
+
     return True
 
 #Author Grant DeBiase
@@ -408,11 +402,24 @@ def learnSkill():
   print("Under construction")
   return True
 
+def applicationStatusNotification():
+    print()
+    currentUsername = currentUser['username']
+    jobs = jobs_db.read()
+
+    appliedJobsCount = 0
+    for job in jobs:        
+        applications = job["applications"]
+        if any(obj.get("applicantUsername") == currentUsername for obj in applications):
+            appliedJobsCount += 1
+    print(f"You have applied for {appliedJobsCount} job(s).")
 
 def jobSearchAction():
   print("Performing job search...")
   print("--------------------------------")
   databaseInterface.displayJobs(postedJobs)
+
+  applicationStatusNotification()
   return True
 
 
