@@ -375,6 +375,18 @@ def newJobNotifs():
         users_db.update(currentUserIndex, currentUser)
     return True
 
+def deleteJobNotifs():
+    currentUsername = currentUser["username"]
+    currentUserIndex = users_db.read().index(currentUser)
+    if currentUser["notis"]["deletedJob"]:
+        print("-----------------------------------------")
+        while currentUser["notis"]["deletedJob"]:
+            deletedJobNoti = currentUser["notis"]["deletedJob"][0]
+            print(f"\nA job that you have applied for has been deleted: {deletedJobNoti}.")
+            currentUser["notis"]["deletedJob"].remove(deletedJobNoti)
+        users_db.update(currentUserIndex, currentUser)
+    return True
+
 #Author Grant DeBiase
 # Handles user login
 #No existing accounts - returns to main menu
@@ -427,6 +439,7 @@ def login():
   checkNotifications()
   studentNotifs()
   newJobNotifs()
+  deleteJobNotifs()
 
   return True
   
@@ -562,6 +575,27 @@ def displayUnAppliedJobsAction():
 
 #Author Grant DeBiase
 #Deletes Job at index
+# def handleDeleteJob(job, index): 
+#     job_title = job["title"]
+    
+#     # Iterate through applicants and notify each user
+#     applicants = job.get("applications", [])
+#     for applicant in applicants:
+#         applicant_username = applicant["applicantUsername"]
+        
+#         # Add a notification to the user
+#         conditions = [jsonDB.createQueryCondition("username", applicant_username)]
+#         user_record = users_db.query(conditions)
+#         user= user_record[0]
+#         notification = f"Job '{job_title}' has been deleted."
+#         user["notifications"].append(notification)
+#         users_db.update(users_db.read().index(user), user)
+
+#     jobs_db.delete(index)
+#     global postedJobs 
+#     postedJobs = databaseInterface.readJobPosts()
+
+#changed handle delete job to append notification to users notis object
 def handleDeleteJob(job, index): 
     job_title = job["title"]
     
@@ -574,8 +608,7 @@ def handleDeleteJob(job, index):
         conditions = [jsonDB.createQueryCondition("username", applicant_username)]
         user_record = users_db.query(conditions)
         user= user_record[0]
-        notification = f"Job '{job_title}' has been deleted."
-        user["notifications"].append(notification)
+        user["notis"]["deletedJob"].append(job_title)
         users_db.update(users_db.read().index(user), user)
 
     jobs_db.delete(index)
