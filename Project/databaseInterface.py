@@ -148,6 +148,20 @@ def createNameNotification(fullName):
             
         user["notis"]["newStudent"].append(fullName)
         db.update(index,user)
+    return True
 
+def createJobNotification(jobTitle,currentUserName):
+    db = jsonDB(usersDB)
+    users = db.read()
     
+    for index, user in enumerate(users):
+            if currentUserName == user["username"]:
+                continue
+            if 'notis' not in user:
+                user['notis'] = {}
+            if "newStudent" not in user["notis"]:
+                user['notis']['newJob'] = []
+                
+            user["notis"]["newJob"].append(jobTitle)
+            db.update(index,user)
     return True

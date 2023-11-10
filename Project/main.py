@@ -353,12 +353,28 @@ def studentNotifs():
     if currentUser["notis"]["newStudent"]:
         print("-----------------------------------------")
         print("You have incoming new student notifications")
+        print("-----------------------------------------")
         while currentUser["notis"]["newStudent"]:
             newStudentNoti = currentUser["notis"]["newStudent"][0]
             print(f"\n{newStudentNoti} has joined InCollege.")
             currentUser["notis"]["newStudent"].remove(newStudentNoti)
         users_db.update(currentUserIndex, currentUser)
     return True
+
+def newJobNotifs():
+    currentUsername = currentUser["username"]
+    currentUserIndex = users_db.read().index(currentUser)
+    if currentUser["notis"]["newJob"]:
+        print("-----------------------------------------")
+        print("You have incoming new job notifications")
+        print("-----------------------------------------")
+        while currentUser["notis"]["newJob"]:
+            newJobNoti = currentUser["notis"]["newJob"][0]
+            print(f"\nA new job titled {newJobNoti} has been posted!")
+            currentUser["notis"]["newJob"].remove(newJobNoti)
+        users_db.update(currentUserIndex, currentUser)
+    return True
+
 #Author Grant DeBiase
 # Handles user login
 #No existing accounts - returns to main menu
@@ -410,6 +426,7 @@ def login():
   # check for profile & notify
   checkNotifications()
   studentNotifs()
+  newJobNotifs()
 
   return True
   
@@ -452,7 +469,9 @@ def postJobAction():
   employer = input("Employer: ")
   location = input("Location: ")
   salary = input("Salary: ")
-
+  
+  currUserName = currentUser["username"]
+  databaseInterface.createJobNotification(title,currUserName)
   databaseInterface.addJobPost(title, desc, employer, location, salary)
   global jobs_db 
   jobs_db = jsonDB("jobs.json")
