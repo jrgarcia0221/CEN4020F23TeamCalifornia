@@ -135,3 +135,19 @@ def displayJobs(jobs):
     # user_notifications = currentUser.get("notifications", [])
     # for notification in user_notifications:
     #     print(notification)
+
+def createNameNotification(fullName):
+    db = jsonDB(usersDB)
+    users = db.read()
+   
+    for index, user in enumerate(users):
+        if 'notis' not in user:
+            user['notis'] = {}
+        if 'newStudent' not in user['notis']:
+            user['notis']['newStudent'] = []
+            
+        user["notis"]["newStudent"].append(fullName)
+        db.update(index,user)
+
+    
+    return True

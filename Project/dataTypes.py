@@ -20,7 +20,7 @@ def createMessage(fromStudent=None, message=None, read=False):
 
 #Author Grant DeBiase
 #Function to create student dictionary
-def createStudent(username="JohnDoe", password="Password123!", firstname="John", lastname="Doe", major = "major", university = "uni", settings= None, friendrequest=None, friends=None, profile=None, notifications=None, tier="standard", messages=None):
+def createStudent(username="JohnDoe", password="Password123!", firstname="John", lastname="Doe", major = "major", university = "uni", settings= None, friendrequest=None, friends=None, profile=None, notifications=None, tier="standard", messages=None, notis = None):
     return {
         "username": username,
         "password": password,
@@ -34,7 +34,8 @@ def createStudent(username="JohnDoe", password="Password123!", firstname="John",
         "profile": profile or {},
         "notifications": notifications or [],
         "tier": tier, 
-        "messages" : messages or [] #use createMessage dataType
+        "messages" : messages or [], #use createMessage dataType
+        "notis": notis or createNotifications()
     }
 
 def createJobApplication(gradDate="", workDate="", paragraph="", applicantUsername="", applicationDate=[]):
@@ -106,4 +107,11 @@ def createNotification(notifType=None, notification=None):
     return {
         "type": notifType,
         "notification": notification
+    }
+
+def createNotifications(newStudent = None, deletedJob = None, newJob = None):
+    return {
+        "newStudent": newStudent or [],
+        "deletedJob": deletedJob or [],
+        "newJob": newJob or []
     }

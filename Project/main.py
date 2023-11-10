@@ -336,6 +336,9 @@ def createAccount():
         break
     print("Invalid choice, try again")
 
+    #Creating Notification for new users
+  fullName = first + " " + last
+  databaseInterface.createNameNotification(fullName)
 
   databaseInterface.addGuestSettings(username)
   databaseInterface.addStudentAccount(username, password, first, last, major, uni, tier)
@@ -344,6 +347,18 @@ def createAccount():
 
   return True
 
+def studentNotifs():
+    currentUsername = currentUser["username"]
+    currentUserIndex = users_db.read().index(currentUser)
+    if currentUser["notis"]["newStudent"]:
+        print("-----------------------------------------")
+        print("You have incoming new student notifications")
+        while currentUser["notis"]["newStudent"]:
+            newStudentNoti = currentUser["notis"]["newStudent"][0]
+            print(f"\n{newStudentNoti} has joined InCollege.")
+            currentUser["notis"]["newStudent"].remove(newStudentNoti)
+        users_db.update(currentUserIndex, currentUser)
+    return True
 #Author Grant DeBiase
 # Handles user login
 #No existing accounts - returns to main menu
@@ -394,6 +409,7 @@ def login():
   messageNotifs()
   # check for profile & notify
   checkNotifications()
+  studentNotifs()
 
   return True
   
