@@ -58,6 +58,7 @@ def test_newJobPostNotification():
         assert("Test Title" in users_db.read(2)["notis"]["newJob"])
     clearMockDatabases()
 
+
 #Author Grant
 #Tests deleted job that was applied for sends notifications to user who applied
 def test_deletedAppliedForJobNotification():
@@ -85,15 +86,12 @@ def test_deletedAppliedForJobNotification():
 
 #Tests account creation adds notications
 def test_createAccountNotifications():
-    users_db = setupMockData()
-    jobs_db = setupMockJobs()
+    users_db = setupMockData()   
     currentUser = users_db.read(0)
 
     with patch("main.currentUser", currentUser), \
         patch("main.users_db", users_db), \
-        patch("main.jobs_db", jobs_db), \
         patch("databaseInterface.usersDB", "mockData.json"), \
-        patch("databaseInterface.jobsDB", "mockDataJobs.json"), \
         patch("databaseInterface.currentUser", currentUser):
         
         # Mocking input function for testing
@@ -102,8 +100,9 @@ def test_createAccountNotifications():
             createAccount()
 
         users_db = jsonDB("mockData.json")
-        users_db.data.remove(users_db.data[-1])
+        users_db.data.remove (users_db.data[-1])
 
         for student in users_db.data:
-            assert("s 4" in student["notis"]["newStudent"])            
-    clearMockDatabases()
+            assert("s 4" in student["notis"]["newStudent"])  
+    os.remove("MockData.json")
+    
