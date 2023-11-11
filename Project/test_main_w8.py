@@ -59,32 +59,6 @@ def test_newJobPostNotification():
     clearMockDatabases()
 
 #Author Grant
-#Tests new job adds new job notification
-def test_newJobPostNotification():
-    users_db = setupMockData()
-    jobs_db = setupMockJobs()
-    currentUser = users_db.read(0)
-
-    with patch("main.currentUser", currentUser), \
-        patch("main.users_db", users_db), \
-        patch("main.jobs_db", jobs_db), \
-        patch("databaseInterface.usersDB", "mockData.json"), \
-        patch("databaseInterface.jobsDB", "mockDataJobs.json"), \
-        patch("databaseInterface.currentUser", currentUser):
-        
-        # Mocking input function for testing
-        with patch('builtins.input', side_effect=["Test Title", "Test Description", "Test Employer", "Test Location", "Test Salary"]):
-            # Call the function            
-            postJobAction()
-
-        users_db = jsonDB("mockData.json")
-
-        assert("Test Title" in users_db.read(1)["notis"]["newJob"])
-        assert("Test Title" in users_db.read(2)["notis"]["newJob"])
-    clearMockDatabases()
-
-
-#Author Grant
 #Tests deleted job that was applied for sends notifications to user who applied
 def test_deletedAppliedForJobNotification():
     users_db = setupMockData()
