@@ -492,6 +492,9 @@ def postJobAction():
   global postedJobs 
   postedJobs = databaseInterface.readJobPosts()
 
+  global users_db
+  users_db = jsonDB("users.json")
+
   return False
 
 #Author Grant DeBiase
